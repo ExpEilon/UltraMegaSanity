@@ -21,12 +21,10 @@ public abstract class BaseTest {
     protected Client client = null;
     protected GridClient gridClient = null;
     long start,end;
-    String query = MyProperties.deviecsSN .equals("-") ? "@os='ios' and @emulator='true'": "@serialnumber = '" + ((MyThread)Thread.currentThread()).getQuery()+"'";
-    boolean isSimulator = query.contains("-") ? true : false;
+    String query = ((MyThread)Thread.currentThread()).getQuery();
 
     @Before
     public void setUp() {
-        query += ((!MyProperties.runOn.isGrid && isSimulator) ? "and  @emulator='true'" : "");
         start = System.currentTimeMillis();
         if(isGrid){
             gridClient = new GridClient(MyProperties.runOn.AK, MyProperties.runOn.getURL());

@@ -17,8 +17,7 @@ public class AppiumBaseTest {
 
     MyiOSDriver driver;
     DesiredCapabilities dc;
-    String query = MyProperties.deviecsSN .equals("-") ? "@os='ios' and @emulator='true'": "@serialnumber='" + ((MyThread)Thread.currentThread()).getQuery()+"'";
-    boolean isSimulator = query.contains("-") ? true : false;
+    String query = ((MyThread)Thread.currentThread()).getQuery();
     long start,end;
 
     boolean isGrid = MyProperties.runOn.isGrid;
@@ -28,7 +27,7 @@ public class AppiumBaseTest {
         dc.setCapability("autoGrantPermissions",true);
         dc.setCapability("autoDismissAlerts",true);
         if(isGrid) dc.setCapability("accessKey", MyProperties.runOn.AK);
-        dc.setCapability("deviceQuery", query + ((!MyProperties.runOn.isGrid && isSimulator) ? " and  @emulator='true'" : ""));
+        dc.setCapability("deviceQuery", query);
         if(MyProperties.makeReporter) {
             dc.setCapability("reportDirectory", "reports");
             dc.setCapability("reportFormat", "xml");

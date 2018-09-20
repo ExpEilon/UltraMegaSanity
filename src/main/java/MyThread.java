@@ -30,7 +30,7 @@ public class MyThread extends Thread {
     }
 
     public String getQuery() {
-        return query;
+        return "@serialnumber = '" + query + "'" + (query.contains("-") ? "and  @emulator='true'":"");
     }
 
     public String getDirectory() {

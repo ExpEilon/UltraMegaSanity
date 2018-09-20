@@ -26,7 +26,7 @@ public class EriBankAppium extends AppiumBaseTest{
             driver.executeScript("seetest:client.uninstall(\"com.experitest.ExperiBank\")");
         driver.installApp(isGrid? "cloud:com.experitest.ExperiBank":"com.experitest.ExperiBank");
         driver.executeScript("seetest:client.launch(\"com.experitest.ExperiBank\",\""+MyProperties.instrumented+"\",\"true\")");
-        if(isSimulator) Thread.sleep(10000);
+//        if(isSimulator) Thread.sleep(10000);
         driver.findElement(By.xpath("//*[@placeholder='Username']")).sendKeys("company");
         driver.findElement(By.xpath("//*[@placeholder='Password']")).sendKeys("company");
         driver.hideKeyboard();
@@ -43,7 +43,7 @@ public class EriBankAppium extends AppiumBaseTest{
         driver.findElement(By.xpath("//*[@text='Italy']")).click();
         driver.executeScript("seetest:client.setProperty(\"ios.auto.dismiss.alerts\", false)");
         driver.findElement(By.xpath("//*[@text='sendPaymentButton']")).click();
-        if(isSimulator) Thread.sleep(1000);
+//        if(isSimulator) Thread.sleep(1000);
         driver.findElement(By.xpath("//*[@text='Yes']")).click();
         double after = Double.parseDouble(driver.findElement(By.xpath("//*[@class='UIAView' and ./*[@class='UIAStaticText']]")).getText().split(":")[1].split("\\$")[0]);
         Assert.assertTrue("The values don't match!",before-after==payment);

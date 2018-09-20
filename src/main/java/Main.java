@@ -24,8 +24,10 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
         MyProperties.lastReboot = System.currentTimeMillis();
-        PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
-        System.setOut(out);
+        if(MyProperties.saveClientLogToFile) {
+            PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
+            System.setOut(out);
+        }
         new File(new File("").getAbsolutePath() + "//TestResult").mkdir();
         List<String> devices = getSerialNumbers();
         if(MyProperties.runOn.isGrid) {
