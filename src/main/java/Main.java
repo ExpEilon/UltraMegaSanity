@@ -55,28 +55,23 @@ public class Main {
         }
     }
     private static List<String> getSerialNumbers() {
-        if(!MyProperties.deviecsSN.equals("")) {
-            String[] devices = MyProperties.deviecsSN.split(",");
-            return Arrays.asList(devices);
-        } else {
-            return getDevicesSN().stream()
-                    .map(e -> e.split(",")[0])
-                    .collect(Collectors.toList());
-        }
+        if(MyProperties.deviecsSN.equals(""))
+            return getDevicesSN();
+        else
+            return Arrays.asList(MyProperties.deviecsSN.split(","));
     }
-    public static ArrayList<String> getDevicesSN() {
-        ArrayList<String> SN = new ArrayList<>();
-        String tmp;
+
+    public static List<String> getDevicesSN() {
         String str = MyProperties.runOn.isGrid ? new GridClient(MyProperties.runOn.AK,MyProperties.runOn.getURL()).getDevicesInformation() :
                 new MyClient(MyProperties.runOn.ip,MyProperties.runOn.port).getDevicesInformation();
-        for(int row = 0;row<Math.max(str.split("\n").length,MyProperties.maxDevices);row++) {
-            tmp = str.split("\n")[row];
-            boolean checkForLoaclConnected = MyProperties.runOn.isGrid ? true : !tmp.contains("location=\"local\"");
-            if(tmp.contains("serialnumber") && checkForLoaclConnected && tmp.contains("os=\"ios\"")) {
-                    SN.add(tmp.split(" serialnumber=\"")[1].split("\"")[0] + "," + tmp.split(" name=\"")[1].split("\"")[0]);
-            }
+        if(MyProperties.runOn.isGrid)
+            return Arrays.asList(str.split("\n")).stream().filter(s -> s.contains("os=\"ios\"") && s.contains("status=\"unreserved online\"")) //need to add in case reserved for me
+                    .map(s -> s.split(" serialnumber=\"")[1].split("\"")[0]).collect(Collectors.toList());
+        else{
+            return Arrays.asList(str.split("\n")).stream().filter(s -> s.contains("os=\"ios\"") && (s.contains("remote=\"false\"") ||
+                    (s.contains("reservedtoyou=\"true\"")) && !s.contains("status=\"reserved offline\"")))
+                    .map(s -> s.split(" serialnumber=\"")[1].split("\"")[0]).collect(Collectors.toList());
         }
-        return SN;
     }
     public static void collectData() throws Exception{
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
