@@ -1,16 +1,19 @@
 import com.experitest.client.Client;
 import com.experitest.client.Utils;
 import com.experitest.client.log.Level;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 
@@ -32,7 +35,7 @@ public class SetAuthTest extends BaseTest{
             "TouchIDLockoutError",
             "AppCancelError",
             "InvalidContextError"};
-    // private String[] uIReplays = new String[replays.length];
+
     private String[] expectedReplies={
             "Success",
             "StopMock have No Fixed Replay",
@@ -47,13 +50,18 @@ public class SetAuthTest extends BaseTest{
             "Error Code: -9. kLAErrorAppCancel",
             "Error Code: -10. kLAErrorInvalidContext"};
     private int[] waitTimes = {0,1000,2000,5000,7000,8000,10000,13000,15000,17000,20000};
-    private long[] measuredWaitTimes = new long[waitTimes.length];
+
     @Test
     public void testSetAuthTest_Replies(){
+        app = "com.experitest.UICatalog";
         if(MyProperties.makeReporter)
             client.setReporter("xml", projectBaseDirectory +"//Reporter", "SetAuthTest");
-        client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\UICatalog.ipa",true,false);
-        client.launch("com.experitest.UICatalog", true, true);
+        if(!installedInstrumented(app))
+            client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\UICatalog.ipa",true,false);
+        if(createContainer)
+            client.launch(app, launchOptionsMap);
+        else
+            client.launch(app, true, true);
         client.elementListSelect("", "text=Authentication", 0, true);
         String uIReply;
         String reply;
@@ -63,7 +71,6 @@ public class SetAuthTest extends BaseTest{
             client.setAuthenticationReply(reply, 0);
             client.click("NATIVE", "text=Request Touch ID Authentication", 0, 1);
             uIReply = client.elementGetText("NATIVE", "xpath=//*[@class='UIView' and @height>0 and ./*[@text='TouchID']]//*[@class='UILabel']", 1);
-            //System.out.println(uIReplay);
             if (!reply.equals("StopMock")){
                 boolean correctResult=uIReply.equals(expectedReplies[i]);
                 if (correctResult){
@@ -84,20 +91,16 @@ public class SetAuthTest extends BaseTest{
     }
 
     @Test
-    public void testSetAuthTest_Times(){
-//        client.setLogger(Utils.initDefaultLogger(Level.ALL));
-//        client.startLoggingDevice(projectBaseDirectory+"//devicelog.log");
+    public void testSetAuthTest_Times() {
+        app = "com.experitest.UICatalog";
+        if(!installedInstrumented(app))
+            client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\UICatalog.ipa",true,false);
         if(MyProperties.makeReporter)
             client.setReporter("xml", projectBaseDirectory +"//Reporter", "SetAuthTest");
-//        Map<String, Object> launchOptionsMap = new HashMap();
-//        Map envVars = new HashMap();
-//        envVars.put("EXPERI_ENABLE_LOG_TO_CONTAINER", "true");
-//        launchOptionsMap.put("launch_env", envVars);
-//        launchOptionsMap.put("instrument", true);
-//        launchOptionsMap.put("relaunch", true);
-//        client.launch("com.experitest.UICatalog",launchOptionsMap);
-
-        client.launch("com.experitest.UICatalog", true, true);
+        if(createContainer)
+            client.launch(app, launchOptionsMap);
+        else
+            client.launch(app, true, true);
         client.elementListSelect("", "text=Authentication", 0, true);
         long time0;
         long measuredWaitTime;
@@ -120,6 +123,7 @@ public class SetAuthTest extends BaseTest{
             System.out.println("Expected Wait Time   (in mSeconds) :"+waitTimes[i]);
             System.out.println("Measured Waited Time (in mSeconds) :"+measuredWaitTime);
             client.click("NATIVE", "xpath=//*[@class='_UIAlertControllerActionView']/*/*", 0, 1);
+            assertTrue("Click didn't work\n",client.isElementFound("NATIVE","xpath=//*[@class='_UIAlertControllerActionView']/*/*"));
         }
     }
 }
