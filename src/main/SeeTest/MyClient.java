@@ -102,9 +102,9 @@ public class MyClient extends Client {
 
     @Override
     public String getDevicesInformation() {
-        long startTime = System.currentTimeMillis();
+//        long startTime = System.currentTimeMillis();
         String s = super.getDevicesInformation();
-        writeToSum(startTime,"getDevicesInformation");
+//        writeToSum(startTime,"getDevicesInformation"); //Doesn't work since writeToSum func uses the Thread to add the time to its data structure in order to save it.
         return s;
     }
 
