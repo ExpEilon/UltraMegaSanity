@@ -2,14 +2,16 @@ import java.util.HashMap;
 
 public class MyProperties {
 
-    static Connection runOn = Connection.STA;
-    static String deviecsSN = "397A7257-D81D-4466-82A2-C701C33795F0";//SN separated by ','
-    static Class[] tests = {EriBankTest.class,SafariLongRun.class,JavaScriptTest.class,DeviceProperty.class,DeviceActions.class,SetAuthTest.class};//for new iOS OS
+    static Connection runOn = Connection.CloudWindows;
+        static String deviecsSN = "";//SN separated by ',' or blank for all iOS devices.
+    static Class[] tests = {/*EriBankTest.class,SafariLongRun.class,JavaScriptTest.class,DeviceProperty.class,DeviceActions.class,*/SetAuthTest.class};//for new iOS OS
 //    static Class[] tests = {ShortTest.class};//for general run
     static boolean allNighter = false;
     static boolean instrumented = false;
     static boolean makeReporter = false;
     static boolean saveClientLogToFile = false;
+    static boolean createContainer = true; //Works only on grid
+    static int getClientLogsLevel = 0; // 0-> no logs, 1 -> normal level, 2 -> high level
     static int maxDevices = 10;
     static boolean collectSupportData = false;
     static int supportDataInterval = 5; //in minutes
