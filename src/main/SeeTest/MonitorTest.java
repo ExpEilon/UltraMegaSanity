@@ -16,8 +16,8 @@ public class MonitorTest extends BaseTest{
 
 
     @Test
-    public void battery(){
-        String file = projectBaseDirectory + "\\monitor.csv";
+    public void nonInstrumented(){
+        String file = projectBaseDirectory + "\\monitorNonInstrumented.csv";
         client.setProperty("ios.auto.accept.alerts", "true");
         client.startMonitor("com.apple.Maps");
         client.deviceAction("Home");
@@ -53,6 +53,23 @@ public class MonitorTest extends BaseTest{
         client.performMultiGesture();
         Assert.assertTrue("CSV file has empty fields!",checkCSV(client.getMonitorsData(file)));
 
+    }
+
+    @Test
+    public void instrumented() {
+        String appName = "com.experitest.ExperiBank";
+        String file = projectBaseDirectory + "\\monitorInstrumented.csv";
+        if(!installedInstrumented(appName))
+            client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\EriBank.ipa",true,false);
+        client.startMonitor(appName);
+        client.launch(appName, true, true);
+        client.elementSendText("NATIVE", "xpath=//*[@accessibilityIdentifier='usernameTextField']", 0, "company");
+        client.elementSendText("NATIVE", "xpath=//*[@accessibilityIdentifier='passwordTextField']", 0, "company");
+        client.click("NATIVE","xpath=//*[@accessibilityLabel='Login']", 0, 1);
+        client.waitForElement("NATIVE","xpath=//*[@accessibilityLabel='Invalid username or password!']", 0, 2000);
+        if (client.isElementFound("NATIVE","xpath=//*[@accessibilityLabel='Invalid username or password!']", 0))
+            client.click("NATIVE","xpath=//*[@text='Dismiss']", 0, 1);
+        Assert.assertTrue("CSV file has empty fields!", checkCSV(client.getMonitorsData(file)));
     }
     public boolean checkCSV(String csv){
         final int rowsToIgnore = 2; // first sample might be empty, so ignores it
