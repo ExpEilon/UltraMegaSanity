@@ -2,16 +2,19 @@ import java.util.HashMap;
 
 public class MyProperties {
 
-    static Connection runOn = Connection.CloudWindows;
-        static String deviecsSN = "";//SN separated by ',' or blank for all iOS devices.
-    static Class[] tests = {/*EriBankTest.class,SafariLongRun.class,JavaScriptTest.class,DeviceProperty.class,DeviceActions.class,*/SetAuthTest.class};//for new iOS OS
-//    static Class[] tests = {ShortTest.class};//for general run
+    static Connection runOn = Connection.STA;
+        static String deviecsSN = "45a8ec778b1e6eb400e828cb989be9934fc03a8b";//SN separated by ',' or blank for all iOS devices.
+//    static Class[] tests = {EriBankTest.class,SafariLongRun.class,JavaScriptTest.class,DeviceProperty.class,DeviceActions.class,RunNativeAPICallTest.class,PressTheDotTest.class,
+//            CounterCommands.class,SetAuthTest.class,EriBankAppium.class,JSAppiumTest.class};//for new iOS OS
+    static Class[] tests = {MonitorTest.class};//for general run
+//    static Class[] tests = {SetLocationTest.class,JSAppiumTest.class};//Appium sanity
     static boolean allNighter = false;
     static boolean instrumented = false;
     static boolean makeReporter = false;
     static boolean saveClientLogToFile = false;
-    static boolean createContainer = true; //Works only on grid
-    static int getClientLogsLevel = 0; // 0-> no logs, 1 -> normal level, 2 -> high level
+    static boolean createContainer = false; //Works only on grid
+    static boolean videoRecording = false; //Works only with reporter
+    static int getClientLogsLevel = 0; // 0-> no logs, 1 -> normal level, 2 -> high level (extended with client extra logs)
     static int maxDevices = 10;
     static boolean collectSupportData = false;
     static int supportDataInterval = 5; //in minutes
