@@ -7,7 +7,7 @@ public class CounterCommands extends BaseTest{
 
     @Test
     public void getInstrumented() throws Exception {
-        client.install(instrumentedApp ,true,false);
+        client.install((isGrid ? "cloud:":"")+instrumentedApp ,true,false);
         counter("cpu",instrumentedApp);
         counter("memory",instrumentedApp);
         counter("battery",instrumentedApp); // wait till SA-25366 solved for non-instrumented

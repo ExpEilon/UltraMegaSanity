@@ -18,14 +18,10 @@ public class MonitorTest extends BaseTest{
     @Test
     public void battery(){
         String file = projectBaseDirectory + "\\monitor.csv";
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "MonitorTest");
+        client.setProperty("ios.auto.accept.alerts", "true");
         client.startMonitor("com.apple.Maps");
         client.deviceAction("Home");
         client.launch("com.apple.Maps", true, true);
-//        client.startMonitor("com.apple.Maps:battery");
-//        client.startMonitor("com.apple.Maps:CPU");
-//        client.startMonitor("com.apple.Maps:memory");
 
         // pinch
         client.startMultiGesture("test");
@@ -59,11 +55,12 @@ public class MonitorTest extends BaseTest{
 
     }
     public boolean checkCSV(String csv){
+        final int rowsToIgnore = 2; // first sample might be empty, so ignores it
         String modifiedCSV = csv.split("\n",2)[1];
         System.out.println(modifiedCSV);
         int csvRows = modifiedCSV.split("\n").length;
-        if(csvRows<1) return true;
-        return !IntStream.range(1,csvRows)
+        if(csvRows<rowsToIgnore) return true;
+        return !IntStream.range(rowsToIgnore,csvRows)
                 .anyMatch(i -> Arrays.asList(modifiedCSV.split("\n")[i].concat("l").split(",")) //adds 'l' to string for case that there are ,,, in the end of the row, so split func gets it.
                         .stream()
                         .anyMatch(j -> j.equals("")));

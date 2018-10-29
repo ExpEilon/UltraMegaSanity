@@ -4,9 +4,7 @@ import org.junit.Test;
 public class JavaScriptTest extends BaseTest {
     @Test
     public void hybridRunJavascript3(){
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "JavaScriptTest");
-        client.launch("safari:http://www.wikipedia.org",MyProperties.instrumented ? true : false,true);
+        client.launch("safari:http://www.wikipedia.org",true,true);
         Assert.assertTrue(client.waitForElement("Web", "xpath=//*[@alt='Wikipedia']", 0, 10000));
         Assert.assertEquals("{\"resultType\":\"\",\"message\":\"\",\"consoleLog\":\"\",\"succeed\":true}", client.hybridRunJavascript("", 0, "function a(){ return '' }; result = a;")); //
         Assert.assertEquals("",client.hybridRunJavascript("", 0, "result = null;")); //''

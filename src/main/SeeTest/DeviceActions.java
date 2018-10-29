@@ -3,9 +3,7 @@ import org.junit.Test;
 public class DeviceActions extends BaseTest {
     @Test
     public void EriTest() throws Exception {
-        if (MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory + "//Reporter", "DeviceActions");
-        client.swipe("Left", 0, 500);
+        client.swipe("Left", 0, 400);
         client.deviceAction("Home");
         client.deviceAction("Power");
         client.deviceAction("Unlock");

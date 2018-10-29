@@ -3,8 +3,6 @@ import org.junit.Test;
 public class DeviceProperty extends BaseTest{
     @Test
     public void EriTest() throws Exception {
-        if (MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory + "//Reporter", "DeviceProperty");
         String str0 = client.getDeviceProperty("orientation");
         String str1 = client.getDeviceProperty("status");
         String str2 = client.getDeviceProperty("device.version");

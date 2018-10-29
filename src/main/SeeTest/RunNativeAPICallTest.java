@@ -6,8 +6,6 @@ public class RunNativeAPICallTest extends BaseTest{
 
     @Test
     public void RunNativeAPICall() throws Exception {
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "RunNativeAPICallTest");
         if(!client.getInstalledApplications().contains(app))
             client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\EriBank.ipa",true,false);
         client.launch(app, true, true);

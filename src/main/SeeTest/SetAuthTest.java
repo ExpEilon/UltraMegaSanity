@@ -54,8 +54,6 @@ public class SetAuthTest extends BaseTest{
     @Test
     public void testSetAuthTest_Replies(){
         app = "com.experitest.UICatalog";
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "SetAuthTest");
         if(!installedInstrumented(app))
             client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\UICatalog.ipa",true,false);
         if(createContainer)
@@ -85,7 +83,7 @@ public class SetAuthTest extends BaseTest{
                 client.report("Result for StopMock is : "+uIReply, true);
 
             }
-            client.click("NATIVE", "xpath=//*[@class='_UIAlertControllerActionView']/*/*", 0, 1);
+            client.isElementFound("NATIVE", "nixpath=//*[@class='_UIAlertControllerActionView']/*/*", 0);
             client.stopStepsGroup();
         }
     }
@@ -95,8 +93,6 @@ public class SetAuthTest extends BaseTest{
         app = "com.experitest.UICatalog";
         if(!installedInstrumented(app))
             client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\UICatalog.ipa",true,false);
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "SetAuthTest");
         if(createContainer)
             client.launch(app, launchOptionsMap);
         else

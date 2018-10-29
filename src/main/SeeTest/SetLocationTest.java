@@ -33,8 +33,6 @@ public class SetLocationTest extends BaseTest{
 
     @Test
     public void testSetLocationIOS(){
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "SetLocationTest");
         client.setProperty("ios.auto.accept.alerts", "true");
         client.launch("com.apple.Maps", true, true);
         client.clearLocation();

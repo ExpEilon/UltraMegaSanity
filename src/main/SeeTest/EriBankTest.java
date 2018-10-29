@@ -14,12 +14,10 @@ public class EriBankTest extends BaseTest {
 
     @Test
     public void EriTest() throws Exception {
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "EriBankTest");
         if(client.getInstalledApplications().contains(appName))
             client.uninstall(appName);
-//        client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\EriBank.ipa",false,false);
-        client.install(isGrid ? "cloud:" + appName : appName, MyProperties.instrumented ? true : false, false);
+        client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\EriBank.ipa",false,false);
+//        client.install(isGrid ? "cloud:" + appName : appName, MyProperties.instrumented ? true : false, false);
 //        HttpResponse<JsonNode> response;
 //            String NEW_APP_URL = "/applications/new";
 //            String webPage = MyProperties.runOn.getURL() + "/api/v1";

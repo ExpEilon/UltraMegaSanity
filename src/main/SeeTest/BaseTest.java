@@ -39,6 +39,8 @@ public abstract class BaseTest {
         start = System.currentTimeMillis();
         if(isGrid){
             gridClient = new GridClient(MyProperties.runOn.AK, MyProperties.runOn.getURL());
+            if(isGrid && MyProperties.videoRecording)
+                gridClient.enableVideoRecording();
         }
         else{
             client = new MyClient(MyProperties.runOn.ip,MyProperties.runOn.port);
@@ -60,10 +62,14 @@ public abstract class BaseTest {
             client.setLogger(Utils.initDefaultLogger(Level.ALL));
         if(MyProperties.getClientLogsLevel > 0)
             client.startLoggingDevice(projectBaseDirectory+"//devicelog_"+sdFormat.format(new Date())+".log");
+        if(MyProperties.makeReporter)
+            client.setReporter("xml", projectBaseDirectory +"//Reporter", this.getClass().getName());
+        if(MyProperties.videoRecording)
+            client.startVideoRecord();
     }
 
     @After
-    public void tearDown() throws UnirestException, IOException {
+    public void tearDown() throws Exception {
 //        client.stopLoggingDevice();
 //        String NEW_APP_URL = "/applications/new";
 //        String webPage = MyProperties.runOn.getURL() + "/api/v1";
@@ -74,8 +80,11 @@ public abstract class BaseTest {
 //                .field("file", f)
 //                .asJson ();
 //        System.out.println(response.getBody().toString());
+        if(MyProperties.videoRecording)
+            client.getRemoteFile(client.stopVideoRecord(),200000,projectBaseDirectory);
         if(MyProperties.makeReporter)
             client.generateReport(false);
+//        client.clearDeviceLog();
         if(MyProperties.getClientLogsLevel > 0)
             client.stopLoggingDevice();
         if(createContainer)
@@ -85,7 +94,6 @@ public abstract class BaseTest {
         ((MyThread)Thread.currentThread()).setDuration((end-start)/1000);
 
     }
-
     protected boolean installedInstrumented(String app){
         if(client.getInstalledApplications().contains(app)){
             client.launch(app,true,true);
@@ -114,5 +122,4 @@ public abstract class BaseTest {
         }
         client.uninstall(app);
     }
-
 }

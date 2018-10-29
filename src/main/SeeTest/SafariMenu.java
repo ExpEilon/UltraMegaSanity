@@ -4,8 +4,7 @@ import org.junit.Test;
 public class SafariMenu extends BaseTest {
     @Test
     public void SafariMenuTest() {
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "SafariMenu");
+        client.hybridClearCache(true,true);
         client.launch("safari:http://imgur.com/upload", true, true);
         client.waitForElement("Web","xpath=//*[@text='Browse']", 0,30000);
         client.click("WEB", "xpath=//*[@text='Browse']", 0, 1);

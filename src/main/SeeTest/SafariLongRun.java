@@ -9,13 +9,10 @@ public class SafariLongRun extends BaseTest{
 
     @Test
     public void webLongRun() {
-//            client.setLogger(Utils.initDefaultLogger(Level.ALL));
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "SafariLongRun");
         client.hybridClearCache(true, true);
         client.launch("safari:www.google.com", true, true);
-        client.verifyElementFound("Web","xpath=//*[@id='hplogo']", 0);
+        Assert.assertTrue("Wasn't found, web dump:\n" + client.getVisualDump("WEB"),client.isElementFound("Web","xpath=//*[@id='hplogo']", 0));
         client.launch("safari:m.ebay.com", true, true);
-//        client.verifyElementFound("Web", "xpath=//*[@id='gh-mlogo']", 0);
+        client.verifyElementFound("Web", "xpath=//*[@id='gh-mlogo']", 0);
     }
 }

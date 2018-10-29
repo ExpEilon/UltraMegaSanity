@@ -38,10 +38,8 @@ public class PressTheDotTest extends BaseTest{
 //                    .basicAuth (MyProperties.username, MyProperties.password)
 //                    .queryString("deviceId","15")
 //                    .asJson ();
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "PressTheDotTest");
         client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\PressTheDot.ipa",false,false);
-        client.launch("dfs.PressTheDot", false, true);
+        client.launch("dfs.PressTheDot2", false, true);
         client.setProperty("ios.auto.accept.alerts", "true");
         client.elementSendText("NATIVE","xpath=((//*[@text='PressTheDot']/*/*[@class='UIAView' and ./parent::*[@class='UIAWindow']])[1]/*[@class='UIATextField'])", 0, "Eilon");
         client.elementSendText("NATIVE","xpath=((//*/*/*[@class='UIAView' and ./parent::*[@class='UIAWindow']])[1]/*[@class='UIATextField'])", 1, "Eilon");

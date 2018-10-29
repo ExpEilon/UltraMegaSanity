@@ -20,8 +20,6 @@ public class PerformanceTime extends BaseTest{
     @Test
     public void testnew(){
         times = new HashMap<>();
-        if(MyProperties.makeReporter)
-            client.setReporter("xml", projectBaseDirectory +"//Reporter", "PerformanceTime");
         client.setSpeed("slow");
         startTime = System.currentTimeMillis();
         myTest();
@@ -39,7 +37,7 @@ public class PerformanceTime extends BaseTest{
         Assert.assertTrue("Fast speed took more than normal speed: " + times,times.get("fast")<times.get("normal"));
     }
     public void myTest(){
-        client.install(appName, true, false);
+//        client.install(appName, true, false);
         client.launch(appName, true, true);
         client.waitForElement("NATIVE", "placeholder=Username", 0, 120000);
         client.elementSendText("NATIVE", "placeholder=Username", 0, "company");
