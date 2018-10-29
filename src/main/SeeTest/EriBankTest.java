@@ -43,9 +43,10 @@ public class EriBankTest extends BaseTest {
         client.waitForElement("NATIVE",MyProperties.instrumented ? "xpath=//*[@accessibilityLabel='Invalid username or password!']" : "xpath=//*[@text='Invalid username or password!']", 0, 2000);
         if (client.isElementFound("NATIVE",MyProperties.instrumented ? "xpath=//*[@accessibilityLabel='Invalid username or password!']" : "xpath=//*[@text='Invalid username or password!']", 0))
             client.click("NATIVE",MyProperties.instrumented ? "xpath=//*[@text='Dismiss']" : "xpath=//*[@text='Dismiss']", 0, 1);
-
-        str0 = client.getTextIn("NATIVE",MyProperties.instrumented ? "xpath=//*[@text='Make Payment']" : "xpath=//*[@text='makePaymentButton']", 0, MyProperties.instrumented ? "WEB" : "NATIVE", "Up", 0, 0);
-        str = str0.split(":")[1].split("\\$")[0];
+        if(!isSimulator) { //We don't support "in" command in simulators
+            str0 = client.getTextIn("NATIVE", MyProperties.instrumented ? "xpath=//*[@text='Make Payment']" : "xpath=//*[@text='makePaymentButton']", 0, MyProperties.instrumented ? "WEB" : "NATIVE", "Up", 0, 0);
+            str = str0.split(":")[1].split("\\$")[0];
+        }
 
 //        double oldD = Double.parseDouble(str);
         client.click("NATIVE", MyProperties.instrumented ?"xpath=//*[@text='Make Payment']" : "xpath=//*[@text='makePaymentButton']", 0, 1);
@@ -65,8 +66,10 @@ public class EriBankTest extends BaseTest {
         client.waitForElement("NATIVE", "xpath=//*[@text='Yes']", 0, 2000);
         if(client.isElementFound("NATIVE", "xpath=//*[@text='Yes']"))
             client.click("NATIVE", "xpath=//*[@text='Yes']", 0, 1);
-        str0 = client.getTextIn("NATIVE",MyProperties.instrumented ? "xpath=//*[@text='Make Payment']" : "xpath=//*[@text='makePaymentButton']", 0, MyProperties.instrumented ? "WEB" : "NATIVE", "Up", 0, 0);
-        str = str0.split(":")[1].split("\\$")[0];
+        if(!isSimulator) {
+            str0 = client.getTextIn("NATIVE", MyProperties.instrumented ? "xpath=//*[@text='Make Payment']" : "xpath=//*[@text='makePaymentButton']", 0, MyProperties.instrumented ? "WEB" : "NATIVE", "Up", 0, 0);
+            str = str0.split(":")[1].split("\\$")[0];
+        }
         client.applicationClose("com.experitest.ExperiBank");
 //        double newD = Double.parseDouble(str);
 //        if(oldD - newD != payment)

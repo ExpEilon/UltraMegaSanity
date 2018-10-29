@@ -30,6 +30,7 @@ public abstract class BaseTest {
     protected GridClient gridClient = null;
     long start,end;
     String query = ((MyThread)Thread.currentThread()).getQuery();
+    boolean isSimulator = query.contains("emulator") ? true : false;
     Map<String, Object> launchOptionsMap;
     SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
     boolean createContainer = MyProperties.createContainer && MyProperties.runOn.isGrid;
