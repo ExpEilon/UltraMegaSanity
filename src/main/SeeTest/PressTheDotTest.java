@@ -18,10 +18,6 @@ public class PressTheDotTest extends BaseTest{
 
     @Test
     public void PressTheDotTest() throws InterruptedException, FileNotFoundException, KeyManagementException, NoSuchAlgorithmException {
-//            if(MyProperties.url.contains("https")){
-//                System.getProperties().setProperty("javax.net.ssl.trustStore","C:\\Users\\eilon.grodsky\\Desktop\\new keystore\\truststore.jks");
-//                System.getProperties().setProperty("javax.net.ssl.trustStorePassword","123456");
-//            }
 //            HttpResponse<JsonNode> response;
 //            String NEW_APP_URL = "/applications/new";
 //            String webPage = MyProperties.url + "/api/v1";
@@ -38,7 +34,9 @@ public class PressTheDotTest extends BaseTest{
 //                    .basicAuth (MyProperties.username, MyProperties.password)
 //                    .queryString("deviceId","15")
 //                    .asJson ();
-        client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\PressTheDot.ipa",false,false);
+        if(MyProperties.installFromPath)
+            client.install(System.getProperty("user.dir")+"\\apps\\PressTheDot.ipa",false,false);
+        else client.install(isGrid ? "cloud:" + "dfs.PressTheDot2" : "dfs.PressTheDot2",false, false);
         client.launch("dfs.PressTheDot2", false, true);
         client.setProperty("ios.auto.accept.alerts", "true");
         client.elementSendText("NATIVE","xpath=((//*[@text='PressTheDot']/*/*[@class='UIAView' and ./parent::*[@class='UIAWindow']])[1]/*[@class='UIATextField'])", 0, "Eilon");

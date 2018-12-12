@@ -37,7 +37,7 @@ public class PerformanceTime extends BaseTest{
         Assert.assertTrue("Fast speed took more than normal speed: " + times,times.get("fast")<times.get("normal"));
     }
     public void myTest(){
-//        client.install(appName, true, false);
+        client.install(appName, true, false);
         client.launch(appName, true, true);
         client.waitForElement("NATIVE", "placeholder=Username", 0, 120000);
         client.elementSendText("NATIVE", "placeholder=Username", 0, "company");
@@ -46,11 +46,11 @@ public class PerformanceTime extends BaseTest{
         client.sendText("{ENTER}");
         client.click("NATIVE", "accessibilityLabel=makePaymentButton", 0, 1);
         client.waitForElement("NATIVE", "accessibilityLabel=countryButton", 0, 10000);
-        client.click("TEXT", "Select", 0, 1);
+        client.click("NATIVE", "xpath=//*[@text='Select']", 0, 1);
         client.elementListSelect("", "text=Tanzania", 0, false);
         client.click("NATIVE", "xpath=//*[@accessibilityLabel='Tanzania']", 0, 1);
         client.waitForElement("NATIVE", "accessibilityLabel=cancelButton", 0, 120000);
-        client.click("TEXT", "Cancel", 0, 1);
+        client.click("NATIVE", "accessibilityLabel=cancelButton", 0, 1);
         client.waitForElement("TEXT", "Logout", 0, 10000);
         client.click("NATIVE", "accessibilityLabel=logoutButton", 0, 1);
         client.launch("safari:http://www.wikipedia.org", true, true);

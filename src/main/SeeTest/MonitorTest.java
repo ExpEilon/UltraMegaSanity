@@ -1,9 +1,6 @@
 import com.experitest.client.Client;
 import com.sun.jna.StringArray;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -14,9 +11,9 @@ import java.util.stream.IntStream;
 
 public class MonitorTest extends BaseTest{
 
-
     @Test
     public void nonInstrumented(){
+
         String file = projectBaseDirectory + "\\monitorNonInstrumented.csv";
         client.setProperty("ios.auto.accept.alerts", "true");
         client.startMonitor("com.apple.Maps");
@@ -55,12 +52,13 @@ public class MonitorTest extends BaseTest{
 
     }
 
+    @Ignore
     @Test
     public void instrumented() {
         String appName = "com.experitest.ExperiBank";
-        String file = projectBaseDirectory + "\\monitorInstrumented.csv";
+        String file = projectBaseDirectory + "\\monitorInstrumented_"+  System.currentTimeMillis() +".csv";
         if(!installedInstrumented(appName))
-            client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\EriBank.ipa",true,false);
+            client.install(System.getProperty("user.dir")+"\\apps\\EriBank.ipa",true,false);
         client.startMonitor(appName);
         client.launch(appName, true, true);
         client.elementSendText("NATIVE", "xpath=//*[@accessibilityIdentifier='usernameTextField']", 0, "company");
@@ -71,6 +69,7 @@ public class MonitorTest extends BaseTest{
             client.click("NATIVE","xpath=//*[@text='Dismiss']", 0, 1);
         Assert.assertTrue("CSV file has empty fields!", checkCSV(client.getMonitorsData(file)));
     }
+
     public boolean checkCSV(String csv){
         final int rowsToIgnore = 2; // first sample might be empty, so ignores it
         String modifiedCSV = csv.split("\n",2)[1];

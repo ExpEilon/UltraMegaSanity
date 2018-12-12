@@ -27,7 +27,7 @@ public class JSAppiumTest extends AppiumBaseTest{
 //        Assert.assertTrue("executeScript didn't work for List returned value", driver.executeScript("return document.getElementsByTagName('style');") instanceof List);
 //        Assert.assertTrue("executeScript didn't work for List, the list doesn't have WebElements", ((List)driver.executeScript("return document.getElementsByTagName('style');")).get(0) instanceof WebElement);
         driver.get("http://www.google.com/");
-        try (FileReader fr = new FileReader("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\jquery.txt");
+        try (FileReader fr = new FileReader(System.getProperty("user.dir")+"\\jquery.txt");
              BufferedReader br = new BufferedReader(fr)) {
             jQuery = br.lines().collect(Collectors.joining("\n"));
         }

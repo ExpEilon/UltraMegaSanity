@@ -21,12 +21,14 @@ public class AppiumBaseTest {
     long start,end;
 
     boolean isGrid = MyProperties.runOn.isGrid;
+    boolean isSimulator = query.contains("emulator") ? true : false;
     @Before
     public void setUp(){
         dc = new DesiredCapabilities();
-        dc.setCapability("autoGrantPermissions",true);
-        dc.setCapability("autoDismissAlerts",true);
-        if(isGrid) dc.setCapability("accessKey", MyProperties.runOn.AK);
+//        dc.setCapability("autoGrantPermissions",true);
+//        dc.setCapability("autoDismissAlerts",true);
+        if(isGrid)
+            dc.setCapability("accessKey", MyProperties.runOn.AK);
         dc.setCapability("deviceQuery", query);
         if(MyProperties.makeReporter) {
             dc.setCapability("reportDirectory", "reports");
@@ -42,4 +44,5 @@ public class AppiumBaseTest {
         end = System.currentTimeMillis();
         ((MyThread)Thread.currentThread()).setDuration((end-start)/1000);
     }
+
 }

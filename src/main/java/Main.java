@@ -4,11 +4,13 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.sun.jna.platform.mac.MacFileUtils;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSDriver;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,6 +20,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Main {
     public static int interval = MyProperties.supportDataInterval*60*1000;
@@ -28,17 +31,18 @@ public class Main {
             PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
             System.setOut(out);
         }
-        new File(new File("").getAbsolutePath() + "//TestResult").mkdir();
-        List<String> devices = getSerialNumbers();
+        new File(System.getProperty("user.dir") + "//TestResult").mkdir();
         if(MyProperties.runOn.isGrid) {
             System.getProperties().setProperty("javax.net.ssl.trustStore","C:\\Users\\eilon.grodsky\\Desktop\\new keystore\\truststore.jks");
             System.getProperties().setProperty("javax.net.ssl.trustStorePassword","123456");
         }
-        devices.forEach((sn) -> {
-            MyThread thread = new MyThread(sn);
-            thread.setName(sn);
-            thread.start();
-        });
+        JFrame frame = new JFrame("Test");
+        frame.setContentPane(new StartPanel());
+        frame.pack();
+        frame.setSize(500,500);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setVisible(true);
         if(MyProperties.collectSupportData) {
             new Thread(() -> {
                 for (int i = 0; i < Integer.MAX_VALUE; i++){
@@ -54,25 +58,7 @@ public class Main {
             }).start();
         }
     }
-    private static List<String> getSerialNumbers() {
-        if(MyProperties.deviecsSN.equals(""))
-            return getDevicesSN();
-        else
-            return Arrays.asList(MyProperties.deviecsSN.split(","));
-    }
 
-    public static List<String> getDevicesSN() {
-        String str = MyProperties.runOn.isGrid ? new GridClient(MyProperties.runOn.AK,MyProperties.runOn.getURL()).getDevicesInformation() :
-                new MyClient(MyProperties.runOn.ip,MyProperties.runOn.port).getDevicesInformation();
-        if(MyProperties.runOn.isGrid)
-            return Arrays.asList(str.split("\n")).stream().filter(s -> s.contains("os=\"ios\"") && s.contains("status=\"unreserved online\"")) //need to add in case reserved for me
-                    .map(s -> s.split(" serialnumber=\"")[1].split("\"")[0]).collect(Collectors.toList());
-        else{
-            return Arrays.asList(str.split("\n")).stream().filter(s -> s.contains("os=\"ios\"") && (s.contains("remote=\"false\"") ||
-                    (s.contains("reservedtoyou=\"true\"")) && !s.contains("status=\"reserved offline\"")))
-                    .map(s -> s.split(" serialnumber=\"")[1].split("\"")[0]).collect(Collectors.toList());
-        }
-    }
     public static void collectData() throws Exception{
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
         Date now = new Date();

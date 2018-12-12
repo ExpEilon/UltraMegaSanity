@@ -23,7 +23,7 @@ public class BruteForce {
 //                        HttpResponse<JsonNode> response;
                 String NEW_APP_URL = "/applications/new";
                 String webPage = MyProperties.runOn.getURL() + "/api/v1";
-                File f = new File("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\EriBank.ipa");
+                File f = new File(System.getProperty("user.dir")+"\\apps\\EriBank.ipa");
                 /*response =*/ Unirest.post (webPage+NEW_APP_URL)
                         .basicAuth (MyProperties.runOn.username, MyProperties.runOn.password)
                         .queryString ("project", "default")

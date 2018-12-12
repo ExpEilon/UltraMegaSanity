@@ -50,12 +50,12 @@ public class SetAuthTest extends BaseTest{
             "Error Code: -9. kLAErrorAppCancel",
             "Error Code: -10. kLAErrorInvalidContext"};
     private int[] waitTimes = {0,1000,2000,5000,7000,8000,10000,13000,15000,17000,20000};
-
     @Test
     public void testSetAuthTest_Replies(){
+        client.setProperty("ios.waiting.element.polling.interval","75");//Added after clicking was to fast (performance improvement)
         app = "com.experitest.UICatalog";
         if(!installedInstrumented(app))
-            client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\UICatalog.ipa",true,false);
+            client.install(System.getProperty("user.dir")+"\\apps\\UICatalog.ipa",true,false);
         if(createContainer)
             client.launch(app, launchOptionsMap);
         else
@@ -83,16 +83,17 @@ public class SetAuthTest extends BaseTest{
                 client.report("Result for StopMock is : "+uIReply, true);
 
             }
-            client.isElementFound("NATIVE", "nixpath=//*[@class='_UIAlertControllerActionView']/*/*", 0);
             client.stopStepsGroup();
+            client.click("NATIVE","xpath=//*[@class='_UIAlertControllerActionView']",0,1);
         }
     }
 
     @Test
     public void testSetAuthTest_Times() {
         app = "com.experitest.UICatalog";
+        client.setProperty("ios.waiting.element.polling.interval", "75");//Added after clicking was to fast (performance improvement)
         if(!installedInstrumented(app))
-            client.install("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\UICatalog.ipa",true,false);
+            client.install(System.getProperty("user.dir")+"\\apps\\UICatalog.ipa",true,false);
         if(createContainer)
             client.launch(app, launchOptionsMap);
         else
@@ -119,7 +120,7 @@ public class SetAuthTest extends BaseTest{
             System.out.println("Expected Wait Time   (in mSeconds) :"+waitTimes[i]);
             System.out.println("Measured Waited Time (in mSeconds) :"+measuredWaitTime);
             client.click("NATIVE", "xpath=//*[@class='_UIAlertControllerActionView']/*/*", 0, 1);
-            assertTrue("Click didn't work\n",client.isElementFound("NATIVE","xpath=//*[@class='_UIAlertControllerActionView']/*/*"));
+//            assertTrue("Click didn't work\n",!client.isElementFound("NATIVE","xpath=//*[@class='_UIAlertControllerActionView']/*/*"));
         }
     }
 }

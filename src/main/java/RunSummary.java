@@ -5,20 +5,20 @@ import java.util.stream.Collectors;
 
 public class RunSummary {
     String test;
-    long maxTime,totlaTime;
+    long maxTime,totalTime;
     String timeForLongest;
     int success,failure;
     Map<String,Integer> excSum;
     public RunSummary(String test){
         this.test = test;
-        totlaTime = 0;
+        totalTime = 0;
         maxTime = 0;
         success = 0;
         failure = 0;
         excSum = new HashMap<>();
     }
     public RunSummary update(long time,String when,org.junit.runner.Result result){
-        totlaTime += time;
+        totalTime += time;
         if(time>maxTime) {
             maxTime = time;
             timeForLongest = when;
@@ -35,10 +35,13 @@ public class RunSummary {
         }
         return this;
     }
+    public int total(){
+        return success+failure;
+    }
     @Override
     public String toString(){
         return "******************************************************\n"+
-                "Test: " + test +" average time: " + (success==0 ? "" : totlaTime/success) + " longestDuration: " + maxTime +" ,at - " + timeForLongest + " ,success: " + success + " ,failed: " + failure + "\n" +
+                "Test: " + test +" average time: " + (success==0 ? "" : totalTime/success) + " longestDuration: " + maxTime +" ,at - " + timeForLongest + " ,success: " + success + " ,failed: " + failure + "\n" +
                 excSum.entrySet().stream()
                         .map((entry) ->
                                 "failed for exception: " + entry.getKey() + " for " + entry.getValue() + " times"

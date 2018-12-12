@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public abstract class BaseTest {
-    boolean isGrid = MyProperties.runOn.isGrid;
+    boolean isGrid = StartPanel.runOn.isGrid;
     protected static String projectBaseDirectory = ((MyThread)Thread.currentThread()).getDirectory();
     protected Client client = null;
     protected GridClient gridClient = null;
@@ -34,19 +34,19 @@ public abstract class BaseTest {
     boolean isSimulator = query.contains("emulator") ? true : false;
     Map<String, Object> launchOptionsMap;
     static SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-    boolean createContainer = MyProperties.createContainer && MyProperties.runOn.isGrid;
+    boolean createContainer = MyProperties.createContainer && StartPanel.runOn.isGrid;
     String app;
 
     @Before
     public void setUp() {
         start = System.currentTimeMillis();
         if(isGrid){
-            gridClient = new GridClient(MyProperties.runOn.AK, MyProperties.runOn.getURL());
+            gridClient = new GridClient(StartPanel.runOn.AK, StartPanel.runOn.getURL());
             if(isGrid && MyProperties.videoRecording)
                 gridClient.enableVideoRecording();
         }
         else{
-            client = new MyClient(MyProperties.runOn.ip,MyProperties.runOn.port);
+            client = new MyClient(StartPanel.runOn.ip,StartPanel.runOn.port);
 //            client.setProjectBaseDirectory(projectBaseDirectory);
         }
         if(isGrid)
@@ -114,8 +114,8 @@ public abstract class BaseTest {
     }
 
     protected static int getDeviceId() throws UnirestException {
-        HttpResponse<JsonNode> response1 = Unirest.get(MyProperties.runOn.ip+"/api/v1/devices")
-                .basicAuth(MyProperties.runOn.username, MyProperties.runOn.password)
+        HttpResponse<JsonNode> response1 = Unirest.get(StartPanel.runOn.ip+"/api/v1/devices")
+                .basicAuth(StartPanel.runOn.username, StartPanel.runOn.password)
                 .asJson();
         JSONArray jsonArray = response1.getBody().getObject().getJSONArray("data");
         return IntStream.range(0,jsonArray.length()).mapToObj(i->jsonArray.getJSONObject(i)).collect(Collectors.toList()).stream()
@@ -124,8 +124,8 @@ public abstract class BaseTest {
     public static String getContainer(String app) {
         String path = projectBaseDirectory + "//container_of_" + app + "_at_" + sdFormat.format(new Date()) + ".zip";
         try {
-            HttpResponse<InputStream> response1 = Unirest.get(MyProperties.runOn.ip + "/api/v1/devices/" + getDeviceId() + "/app-container/" + app)
-                    .basicAuth(MyProperties.runOn.username, MyProperties.runOn.password)
+            HttpResponse<InputStream> response1 = Unirest.get(StartPanel.runOn.ip + "/api/v1/devices/" + getDeviceId() + "/app-container/" + app)
+                    .basicAuth(StartPanel.runOn.username, StartPanel.runOn.password)
                     .asBinary();
             FileUtils.copyInputStreamToFile(response1.getBody(), new File(path));
         }catch (Exception e){
