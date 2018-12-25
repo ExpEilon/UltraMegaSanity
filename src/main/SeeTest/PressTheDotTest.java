@@ -4,15 +4,12 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;*/
 import org.junit.Test;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
-import java.util.Scanner;
 
-public class PressTheDotTest extends BaseTest{
+public class PressTheDotTest extends SeeTestBase {
     String csvUserName = "";
     String csvPassword = "";
 
@@ -34,7 +31,7 @@ public class PressTheDotTest extends BaseTest{
 //                    .basicAuth (MyProperties.username, MyProperties.password)
 //                    .queryString("deviceId","15")
 //                    .asJson ();
-        if(MyProperties.installFromPath)
+        if(ConfigManager.checkIfSetTrue("installFromPath"))
             client.install(System.getProperty("user.dir")+"\\apps\\PressTheDot.ipa",false,false);
         else client.install(isGrid ? "cloud:" + "dfs.PressTheDot2" : "dfs.PressTheDot2",false, false);
         client.launch("dfs.PressTheDot2", false, true);

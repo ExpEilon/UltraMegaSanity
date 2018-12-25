@@ -25,12 +25,12 @@
         <dependency>
             <groupId>com.experitest</groupId>
             <artifactId>appium-seetest-extension</artifactId>
-            <version>12.1</version>
+            <version>12.2</version>
         </dependency>
         <dependency>
             <groupId>com.experitest</groupId>
             <artifactId>seetest-client</artifactId>
-            <version>12.1</version>
+            <version>12.2</version>
         </dependency>
         <dependency>
             <groupId>com.mashape.unirest</groupId>

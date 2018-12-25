@@ -1,6 +1,6 @@
 import org.junit.Test;
 
-public class DeviceActions extends BaseTest {
+public class DeviceActions extends SeeTestBase {
     @Test
     public void EriTest() throws Exception {
         client.swipe("Left", 0, 400);

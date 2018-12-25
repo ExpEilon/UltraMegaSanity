@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static java.lang.Thread.sleep;
 
-public class RecoveryTest extends BaseTest {
+public class RecoveryTest extends SeeTestBase {
     final int port = 6580;
     final String killCyder = "{\"command\":\"kill_application\",\"bundleID\":\"com.experitest.Cyder\"}";
     final int timeout = 10; // Cyder time to revive in sec.

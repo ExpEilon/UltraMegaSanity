@@ -6,7 +6,7 @@ public class MyClient extends Client {
     public MyClient(String host, int port) {
         super(host, port);
     }
-
+    public MyClient(Client client){};
     @Override
     public boolean install(String path, boolean instrument, boolean keepData) {
         long startTime = System.currentTimeMillis();

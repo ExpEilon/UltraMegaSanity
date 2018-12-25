@@ -1,9 +1,6 @@
 //package <set your test package>;
 
-import com.experitest.client.Client;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -12,7 +9,7 @@ import java.util.Map;
 /**
  *
  */
-public class PerformanceTime extends BaseTest{
+public class PerformanceTime extends SeeTestBase {
 
     String appName = "com.experitest.ExperiBank";
     Map<String,Long> times;

@@ -1,5 +1,6 @@
 import com.experitest.client.Client;
 import com.experitest.client.GridClient;
+import com.google.gson.JsonArray;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -8,6 +9,7 @@ import com.sun.jna.platform.mac.MacFileUtils;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSDriver;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import javax.swing.*;
@@ -15,34 +17,25 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Main {
     public static int interval = MyProperties.supportDataInterval*60*1000;
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         MyProperties.lastReboot = System.currentTimeMillis();
-        if(MyProperties.saveClientLogToFile) {
-            PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
-            System.setOut(out);
-        }
+        ConfigManager.initilizeConn();
+        System.out.println(Arrays.asList(EriBankTest.class.getSuperclass().getTypeName()));
         new File(System.getProperty("user.dir") + "//TestResult").mkdir();
-        if(MyProperties.runOn.isGrid) {
-            System.getProperties().setProperty("javax.net.ssl.trustStore","C:\\Users\\eilon.grodsky\\Desktop\\new keystore\\truststore.jks");
-            System.getProperties().setProperty("javax.net.ssl.trustStorePassword","123456");
-        }
         JFrame frame = new JFrame("Test");
         frame.setContentPane(new StartPanel());
-        frame.pack();
         frame.setSize(500,500);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
+
         if(MyProperties.collectSupportData) {
             new Thread(() -> {
                 for (int i = 0; i < Integer.MAX_VALUE; i++){
@@ -94,11 +87,11 @@ public class Main {
         }
 
     }
-//    public static void collectDataAppium() throws MalformedURLException {
-//        DesiredCapabilities dc = new DesiredCapabilities();
-//        dc.setCapability("deviceQuery", "@serialnumber='672AAB24-ADC5-4E11-A67A-64000CE74E4E' and  @emulator='true'");
-//        AppiumDriver driver = new IOSDriver<>(new URL(MyProperties.runOn.getURL() + "/wd/hub"), new DesiredCapabilities());
-//        driver.executeScript("seetest:client.collectSupportData(\"/Users/eilon.grodsky/appiumstudioenterprise\",\"\",\"\",\"\",\"\",\"\");");
-//        driver.quit();
-//    }
+    public static void collectDataAppium() throws MalformedURLException {
+        DesiredCapabilities dc = new DesiredCapabilities();
+        dc.setCapability("deviceQuery", "@serialnumber='672AAB24-ADC5-4E11-A67A-64000CE74E4E' and  @emulator='true'");
+        AppiumDriver driver = new IOSDriver<>(new URL(MyProperties.runOn.getURL() + "/wd/hub"), new DesiredCapabilities());
+        driver.executeScript("seetest:client.collectSupportData(\"/Users/eilon.grodsky/appiumstudioenterprise\",\"\",\"\",\"\",\"\",\"\");");
+        driver.quit();
+    }
 }

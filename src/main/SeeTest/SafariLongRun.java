@@ -1,11 +1,7 @@
-import com.experitest.client.*;
-import com.experitest.client.log.Level;
 import org.junit.*;
 
-import java.io.File;
 
-
-public class SafariLongRun extends BaseTest{
+public class SafariLongRun extends SeeTestBase {
 
     @Test
     public void webLongRun() {

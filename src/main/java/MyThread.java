@@ -21,6 +21,7 @@ public class MyThread extends Thread {
     List<Class> tests;
     ProgressBarPanel progress;
     MyPanel endPanel;
+    PrintStream out = null;
     public MyThread(String query, List<Class> tests,ProgressBarPanel pBar,MyPanel panel) {
         this.query = query;
         summary = new HashMap<>();
@@ -28,10 +29,14 @@ public class MyThread extends Thread {
         this.tests = tests;
         progress = pBar;
         endPanel = panel;
+        directory = System.getProperty("user.dir") + "//TestResult" + "//" + query;
+        if(!new File(directory).exists())
+            new File(directory).mkdir();
+
     }
 
     public String getQuery() {
-        return "@serialnumber = '" + query + "'" + (query.split("-").length > 2 ? " and  @emulator='true'":"");
+        return "@serialnumber = '" + query + "'" /*+ (query.split("-").length > 2 ? " and  @emulator='true'":"")*/;
     }
 
     public String getDirectory() {
@@ -44,8 +49,14 @@ public class MyThread extends Thread {
 
     @Override
     public void run() {
-        directory = System.getProperty("user.dir") + "//TestResult" + "//" + query;
-        new File(directory).mkdir();
+        if(ConfigManager.checkIfSetTrue("saveClientLogToFile")) {
+            try {
+                out = new PrintStream(new FileOutputStream(directory + "//Client.log"));
+                System.setOut(out);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         //initialize
         for (int i = 0; i < tests.size(); i++)
             summary.put(tests.get(i), new RunSummary(tests.get(i).getName()));
@@ -59,8 +70,10 @@ public class MyThread extends Thread {
         JUnitCore junit = new JUnitCore();
         now = new Date();
         Result result = junit.run(test);
-        exc = result.wasSuccessful() ? test.getName() + " Test Passed" + ", The test took " + duration : test.getName() + " Test failed:\n" +
-                result.getFailures().stream().map(e -> e.getException().getMessage()+e.getTrace()).collect(Collectors.joining("\n"));
+        exc = test.getName() +" Test " + (result.wasSuccessful() ?  "Passed" + ", The test took " + duration :
+                "failed:\n" + result.getFailures().stream().map(e -> e.getException().getMessage()+e.getTrace()).collect(Collectors.joining("\n")));
+        if(ConfigManager.checkIfSetTrue("saveClientLogToFile"))
+            out.append(result.getFailures().stream().map(e ->e.getTrace()).collect(Collectors.joining("\n")));
         summary.put(test, summary.get(test).update(duration, sdFormat.format(now), result));
         writeToSummary(directory + "//AllResults.txt", sdFormat.format(now) + "    " + exc, true);
         if (MyPanel.rounds > 1)
@@ -69,27 +82,7 @@ public class MyThread extends Thread {
         if(WriteSummary.needToWriteSummary())
             WriteSummary.update(query,result.wasSuccessful());
         progress.updateBar(result.wasSuccessful());
-//        synchronized (progress) {
-//            progress.notify();
-//        }
     }
-
-//    public void setProgress(ProgressBarPanel progress){
-//        this.progress = new Thread(() -> {
-//            for (int i = 0; i <= tests.size(); i++) {
-//                final int percent = i;
-//                progress.updateBar(percent);
-//                try {
-//                    synchronized (Thread.currentThread()) {
-//                        Thread.currentThread().wait();
-//                    }
-//                } catch (InterruptedException e1) {
-//                    e1.printStackTrace();
-//                }
-//            }
-//        });
-//        this.progress.start();
-//    }
 
     public static void writeToSummary(String directory, String data, boolean append) {
         PrintWriter writer = null;

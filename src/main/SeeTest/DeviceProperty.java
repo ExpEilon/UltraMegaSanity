@@ -1,6 +1,6 @@
 import org.junit.Test;
 
-public class DeviceProperty extends BaseTest{
+public class DeviceProperty extends SeeTestBase {
     @Test
     public void EriTest() throws Exception {
         String str0 = client.getDeviceProperty("orientation");

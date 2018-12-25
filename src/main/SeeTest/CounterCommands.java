@@ -1,6 +1,6 @@
 import org.junit.Test;
 
-public class CounterCommands extends BaseTest{
+public class CounterCommands extends SeeTestBase {
     String instrumentedApp ="com.experitest.ExperiBank";
     String nonInstrumentedApp ="com.apple.Maps";
     double res;

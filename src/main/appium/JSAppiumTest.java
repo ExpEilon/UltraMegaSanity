@@ -5,16 +5,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class JSAppiumTest extends AppiumBaseTest{
+public class JSAppiumTest extends AppiumBase {
 
     @Test
     public void testApple() throws IOException, InterruptedException {
         dc.setJavascriptEnabled(true);
-        driver = new MyiOSDriver(new URL(MyProperties.runOn.getURL() + "/wd/hub"), dc);
+        driver = new MyiOSDriver(new URL(StartPanel.runOn.getURL() + "/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.get("http://www.google.com/");
         String jQuery;

@@ -1,8 +1,8 @@
 import javax.swing.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class WriteSummary {
     public static String root = System.getProperty("user.dir") +"//TestResult";
@@ -41,14 +41,22 @@ public class WriteSummary {
         return summary.exists();
     }
 
-    public static void createSummary(List<JCheckBox> list){
-        if(summary.exists())
-            summary.delete();
-        if(list.size() > 1) {
-            IntStream.range(0, list.size()).forEach(i -> MyThread.writeToSummary(summary.getPath(),
-                    list.get(i).getText() + ",0,0,0", true));
+    public synchronized static void createSummary(List<JCheckBox> list){
+        final List lineToUpdate = new ArrayList();
+        try {
+            if(summary.exists()) {
+                BufferedReader br = new BufferedReader(new FileReader(summary));
+                br.lines().map(s -> s.split(",")[0]).forEach(e -> lineToUpdate.add(e));
+                br.close();
+            }
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
-
+        List filteredList = list.stream().filter(j -> !lineToUpdate.contains(j.getText())).collect(Collectors.toList());
+        if(filteredList.size() > 0) {
+            list.stream().filter(j -> !lineToUpdate.contains(j.getText())).forEach(i -> MyThread.writeToSummary(summary.getPath(),
+                    i.getText() + ",0,0,0", true));
+        }
     }
     public static File getRootDirectory(){
         return new File(root);
@@ -59,7 +67,6 @@ public class WriteSummary {
         private String sn;
 
         private DeviceSummary(String line){
-            System.out.println("The line here is: " + line);
             sn = line.split(",")[0];
             pass=Integer.parseInt(line.split(",")[1]);
             fail=Integer.parseInt(line.split(",")[2]);

@@ -1,13 +1,14 @@
 import org.junit.Test;
 
-public class ShortTest extends BaseTest{
+public class ShortTest extends SeeTestBase {
 
     String appName = "com.apple.Preferences";
     String app = "com.experitest.UICatalog";
     @Test
     public void shortTest() {
-        client.applicationClearData(app);
-        getContainer(app);
+        client.install("cloud:uniqueName=chasepaypos_ios_q5_12202018",false,false);
+//        client.applicationClearData(app);
+//        getContainer(app);
 //        client.applicationClearData("Experitest.FingerPrintApp");
 //        client.launch(appName, true, true);
 //        client.install("com.experitest.ExperiBank",true,true);

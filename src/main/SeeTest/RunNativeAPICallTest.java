@@ -1,7 +1,6 @@
-import com.experitest.client.*;
 import org.junit.*;
 
-public class RunNativeAPICallTest extends BaseTest{
+public class RunNativeAPICallTest extends SeeTestBase {
     String app ="com.experitest.ExperiBank";
 
     @Test

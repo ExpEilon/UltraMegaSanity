@@ -3,10 +3,6 @@
  */
 //package <set your test package>;
 
-import com.experitest.client.Client;
-import com.experitest.client.GridClient;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -14,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 /**
  *
  */
-public class SetLocationTest extends BaseTest{
+public class SetLocationTest extends SeeTestBase {
     // Xpaths in use :
     String trackingButton = "xpath=//*[@text='Tracking']";
     String myLocation = "xpath=//*[@name='My Location']";

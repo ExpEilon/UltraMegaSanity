@@ -1,26 +1,11 @@
-import com.experitest.client.Client;
-import com.experitest.client.Utils;
-import com.experitest.client.log.Level;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 
 /**
  *
  */
-public class SetAuthTest extends BaseTest{
+public class SetAuthTest extends SeeTestBase {
 
     private String[] replies={
             "Success" ,

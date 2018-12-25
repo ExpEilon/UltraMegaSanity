@@ -1,23 +1,17 @@
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileReader;
 import java.util.Random;
-import java.util.Scanner;
 
-public class EriBankTest extends BaseTest {
+public class EriBankTest extends SeeTestBase {
     String str0,str;
-
+    double oldD,newD;
     @Test
     public void EriTest() throws Exception {
         app = "com.experitest.ExperiBank";
         if(client.getInstalledApplications().contains(app))
             client.uninstall(app);
-        if(MyProperties.installFromPath)
-            client.install(System.getProperty("user.dir")+"\\apps\\EriBank.ipa",false,false);
+        if(ConfigManager.checkIfSetTrue("installFromPath"))
+            client.install(System.getProperty("user.dir")+ "\\apps\\" + (isSimulator ? "ExperiBankSimulator.app.zip" :"EriBank.ipa"),false,false);
         else client.install(isGrid ? "cloud:" + app : app, MyProperties.instrumented ? true : false, false);
         client.launch(app, MyProperties.instrumented ? true : false, true);
         client.elementSendText("NATIVE", MyProperties.instrumented ? "xpath=//*[@accessibilityIdentifier='usernameTextField']" : "xpath=//*[@placeholder='Username']", 0, "company");
@@ -29,9 +23,8 @@ public class EriBankTest extends BaseTest {
         if(!isSimulator) { //We don't support "in" command in simulators
             str0 = client.elementGetProperty("NATIVE", MyProperties.instrumented ? "xpath=//*[@text='Make Payment']" : "xpath=(//*/*[@class='UIAStaticText' and @knownSuperClass='NSObject' and not(contains(text(),'balance'))])", 0,"text");
             str = str0.split("\\$")[0];
+            oldD = Double.parseDouble(str);
         }
-
-        double oldD = Double.parseDouble(str);
         client.click("NATIVE", MyProperties.instrumented ?"xpath=//*[@text='Make Payment']" : "xpath=//*[@text='makePaymentButton']", 0, 1);
         client.elementSendText("NATIVE",MyProperties.instrumented ? "xpath=//*[@accessibilityLabel='Phone']" : "xpath=//*[@placeholder='Phone']", 0, "0523898058");
         client.elementSendText("NATIVE",MyProperties.instrumented ? "xpath=//*[@accessibilityLabel='Name']" : "xpath=//*[@placeholder='Name']", 0, "Eilon");
@@ -52,11 +45,11 @@ public class EriBankTest extends BaseTest {
         if(!isSimulator) {
             str0 = client.elementGetProperty("NATIVE", MyProperties.instrumented ? "xpath=//*[@text='Make Payment']" : "xpath=(//*/*[@class='UIAStaticText' and @knownSuperClass='NSObject' and not(contains(text(),'balance'))])", 0,"text");
             str = str0.split("\\$")[0];
+            newD = Double.parseDouble(str);
+            if(oldD - newD != payment)
+                throw new Exception("The values before and after payment do not match");
         }
         client.applicationClose("com.experitest.ExperiBank");
-        double newD = Double.parseDouble(str);
-        if(oldD - newD != payment)
-            throw new Exception("The values before and after payment do not match");
     }
 }
 

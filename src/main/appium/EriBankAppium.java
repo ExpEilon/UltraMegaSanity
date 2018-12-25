@@ -1,25 +1,18 @@
 //package <set your test package>;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.remote.IOSMobileCapabilityType;
-import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.ios.IOSElement;
-import io.appium.java_client.remote.MobileCapabilityType;
+import com.experitest.appium.SeeTestClient;
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.By;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
-public class EriBankAppium extends AppiumBaseTest{
+public class EriBankAppium extends AppiumBase {
 
     @Test
     public void testUntitled() throws MalformedURLException, InterruptedException {
-        driver = new MyiOSDriver(new URL(MyProperties.runOn.getURL() + "/wd/hub"), dc);
+        driver = new MyiOSDriver(new URL(StartPanel.runOn.getURL() + "/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         if(driver.isAppInstalled("com.experitest.ExperiBank"))
@@ -41,7 +34,7 @@ public class EriBankAppium extends AppiumBaseTest{
         driver.findElement(By.xpath("//*[@text='countryButton']")).click();
 //        driver.swipe(260, 881, 269, 12, 128);
         driver.findElement(By.xpath("//*[@text='Italy']")).click();
-        driver.executeScript("seetest:client.setProperty(\"ios.auto.dismiss.alerts\", false)");
+        driver.executeScript("seetest:client.setProperty(\"ios.auto.dismiss.alerts\",false)");
         driver.findElement(By.xpath("//*[@text='sendPaymentButton']")).click();
 //        if(isSimulator) Thread.sleep(1000);
         driver.findElement(By.xpath("//*[@text='Yes']")).click();

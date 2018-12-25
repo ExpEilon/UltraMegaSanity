@@ -6,17 +6,18 @@ public class MyProperties {
     static Connection runOn = Connection.CloudWindows;
     static String deviecsSN = "00008027-000319C21498002E";//SN separated by ',' or blank for all iOS devices.
     static Class[] tests = {EriBankTest.class,SafariLongRun.class,JavaScriptTest.class,DeviceProperty.class,DeviceActions.class,RunNativeAPICallTest.class,PressTheDotTest.class,
-            CounterCommands.class,SetAuthTest.class,EriBankAppium.class,JSAppiumTest.class,PerformanceTest.class};//for new iOS OS
+            CounterCommands.class,SetAuthTest.class,MonitorTest.class,EriBankAppium.class,JSAppiumTest.class,PerformanceTest.class,ShortTest.class};//for new iOS OS
 //    static Class[] tests = {EriBankTest.class,PressTheDotTest.class,SafariSameTab.class,SafariLongRun.class,DeviceActions.class,DeviceProperty.class,MonitorTest.class};//for general run
 //    static Class[] tests = {SafariLongRun.class};//Appium sanity
     static int numOfRuns = 1000;
-    static boolean installFromPath = false;
+//    static boolean installFromPath = true;
     static boolean instrumented = false;
-    static boolean makeReporter = false;
-    static boolean saveClientLogToFile = false;
+//    static boolean makeReporter = false;
+//    static boolean saveClientLogToFile = false;
     static boolean createContainer = false; //Works only on grid
     static boolean videoRecording = false; //Works only with reporter
-    static int getClientLogsLevel = 0; // 0-> no logs, 1 -> normal level, 2 -> high level (extended with client extra logs)
+    static boolean extenedClientLog = false;
+//    static boolean deviceLog = false;
     static int maxDevices = 10;
     static boolean collectSupportData = false;
     static int supportDataInterval = 5; //in minutes
@@ -25,7 +26,7 @@ public class MyProperties {
     enum Connection{
 //        CloudWindows ("https://eilongrodsky-pc",443,"eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVek16SXhNekkzTmpZek9RIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NDg1NzMyNzYsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.XsuzHTOHBmFawHabJYTOnr5fbjA17HhzQurSjzBBEnw",
 //                "admin","Experitest2012",true),
-        CloudWindows ("http://192.168.2.22",9000,"eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVME5ERXdNVEUzTXpneE1nIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NTk0NjExNzQsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.jYD-urvjQ6cqlBL03EwyfYFWV4E8R2QMkCoqGJ1neA8",
+        CloudWindows ("http://192.168.2.22",80,"eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVME5ERXdNVEUzTXpneE1nIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NTk0NjExNzQsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.jYD-urvjQ6cqlBL03EwyfYFWV4E8R2QMkCoqGJ1neA8",
                 "admin","Experitest2012",true),
         CloudMac ("http://192.168.2.29",9000,"eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVME1ESXlOVE00TWpnMk9BIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NTU1ODUzODMsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.REsnj_ETp0ajEpl40eMhQvI7vU-O0We87LKBqAWiFM0",
                 "admin","Qwer1234",true),
@@ -81,6 +82,5 @@ public class MyProperties {
         put(MonitorTest.class,90);
         put(SafariMenu.class,1000);
         put(SafariSameTab.class,60);
-
     }};
 }

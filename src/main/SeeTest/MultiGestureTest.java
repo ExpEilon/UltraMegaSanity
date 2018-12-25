@@ -3,17 +3,9 @@
  */
 //package <set your test package>;
 
-import com.experitest.client.Client;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-public class MultiGestureTest extends BaseTest{
+public class MultiGestureTest extends SeeTestBase {
 
     @Test
     public void testMultiGestureTest() throws Exception {

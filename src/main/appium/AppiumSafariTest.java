@@ -2,18 +2,18 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 
-public class AppiumSafariTest extends AppiumBaseTest {
+public class AppiumSafariTest extends AppiumBase {
 
     @Test
     public void testUntitled() throws Exception {
-        driver = new MyiOSDriver(new URL(MyProperties.runOn.getURL() + "/wd/hub"), dc);
+        driver = new MyiOSDriver(new URL(StartPanel.runOn.getURL() + "/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        if(MyProperties.makeReporter) System.out.println((String) driver.getCapabilities().getCapability("reportUrl"));
+        if(ConfigManager.checkIfSetTrue("makeReporter"))
+            System.out.println((String) driver.getCapabilities().getCapability("reportUrl"));
         driver.get("http://www.google.com/");
         driver.context("WEBVIEW_1");
         driver.findElement(By.xpath("//*[@name='q']")).sendKeys("experitest");

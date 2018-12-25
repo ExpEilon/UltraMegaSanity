@@ -1,7 +1,7 @@
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SafariMenu extends BaseTest {
+public class SafariMenu extends SeeTestBase {
     @Test
     public void SafariMenuTest() {
         client.hybridClearCache(true,true);

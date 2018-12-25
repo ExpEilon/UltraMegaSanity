@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -46,18 +47,25 @@ public class TouchActioniOS {
 
     @Test
     public void testUntitled() throws InterruptedException {
+        driver.context("WEBVIEW_1");
+        WebElement searchBar = driver.findElement(By.xpath("//*[@name='q']"));
+        searchBar.sendKeys("Experitest");
+        searchBar.sendKeys(Keys.ENTER);
+
         //AS-25801 test for input String/Int/Null/List/WebElement/boolean/Undefined
 //        driver.get("http://www.google.com");
-        driver.context("WEBVIEW_1");
+//        driver.context("WEBVIEW_1");
+//        List<Long> l = (List<Long>) driver.executeScript("return [1,'abc','abc']");
+
 //        driver.executeScript("return [1,'abc']");
 //        ((JavascriptExecutor)driver).executeScript("arguments[0].click()", ele);
 //        driver.switchTo().frame("iframeWithSameDomain");//html/body/IFRAME[2]/html/body/div[1]/p
-        driver.get("http://192.168.4.85:8060/html-tests/RegressionHibridApplication/iFramePage.html");
+//        driver.get("http://192.168.4.85:8060/html-tests/RegressionHibridApplication/iFramePage.html");
 //        WebElement ele = driver.findElement(By.xpath("//*[@id='btn1']"));
 //        WebElement ele = (WebElement)driver.executeScript("return document.getElementsByTagName(arguments[0])[arguments[1]]", "p",0);
-        ((JavascriptExecutor)driver).executeScript("if(arguments[0] == 1){\n" +
-                "    alert('hi')\n" +
-                "}",1);
+//        ((JavascriptExecutor)driver).executeScript("if(arguments[0] == 1){\n" +
+//                "    alert('hi')\n" +
+//                "}",1);
 
 //        WebElement ele = (WebElement)driver.executeScript("return document.getElementsByTagName(arguments[0])[arguments[1]]", "p","1");
 //        ((JavascriptExecutor)driver).executeScript("arguments[0].style.color = arguments[1]", ele,"red");

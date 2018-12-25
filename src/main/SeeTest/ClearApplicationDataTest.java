@@ -2,16 +2,14 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
-public class ClearApplicationDataTest extends BaseTest {
+public class ClearApplicationDataTest extends SeeTestBase {
     String clearPasswordApp = "Experitest.FingerPrintApp";
     String clearContainerApp = "com.experitest.ExperiBank";
     String clearSettingApp = "com.experitest.UICatalog";

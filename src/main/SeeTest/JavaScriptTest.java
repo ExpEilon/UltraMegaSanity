@@ -1,7 +1,7 @@
 import org.junit.Assert;
 import org.junit.Test;
 
-public class JavaScriptTest extends BaseTest {
+public class JavaScriptTest extends SeeTestBase {
     @Test
     public void hybridRunJavascript3(){
         client.launch("safari:http://www.wikipedia.org",true,true);

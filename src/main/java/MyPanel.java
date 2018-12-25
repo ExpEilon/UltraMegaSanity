@@ -1,10 +1,7 @@
-import com.experitest.client.GridClient;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,10 +39,10 @@ public class MyPanel extends JPanel implements ActionListener {
         jCheckAllTests.addActionListener(this);
         testsPanel.add(jCheckAllTests);
         jCheckAllTestsList = new ArrayList();
-        if(StartPanel.runOn.toString().equals("STA"))
-            IntStream.range(0,MyProperties.tests.length).filter(j -> !MyProperties.tests[j].getName().contains("Appium")).forEach(i -> jCheckAllTestsList.add(new JCheckBox(MyProperties.tests[i].getName())));
-        else if(StartPanel.runOn.toString().equals("ASE"))
-            IntStream.range(0,MyProperties.tests.length).filter(j -> MyProperties.tests[j].getName().contains("Appium")).forEach(i -> jCheckAllTestsList.add(new JCheckBox(MyProperties.tests[i].getName())));
+        if(StartPanel.runOn.name.equals("STA"))
+            IntStream.range(0,MyProperties.tests.length).filter(j -> MyProperties.tests[j].getSuperclass().getName().contains("SeeTestBase")).forEach(i -> jCheckAllTestsList.add(new JCheckBox(MyProperties.tests[i].getName())));
+        else if(StartPanel.runOn.name.equals("ASE"))
+            IntStream.range(0,MyProperties.tests.length).filter(j -> !MyProperties.tests[j].getSuperclass().getName().contains("SeeTestBase")).forEach(i -> jCheckAllTestsList.add(new JCheckBox(MyProperties.tests[i].getName())));
         else IntStream.range(0,MyProperties.tests.length).forEach(i -> jCheckAllTestsList.add(new JCheckBox(MyProperties.tests[i].getName())));
         jCheckAllTestsList.stream().forEach(i -> testsPanel.add(i));
         add(testsPanel,BorderLayout.WEST);

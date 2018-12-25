@@ -1,6 +1,6 @@
 import org.junit.Test;
 
-public class SafariSameTab extends BaseTest{
+public class SafariSameTab extends SeeTestBase {
 
     @Test
     public void SafariSameTab() {

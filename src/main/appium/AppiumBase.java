@@ -13,24 +13,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-public class AppiumBaseTest {
+public class AppiumBase extends BaseTest{
 
     MyiOSDriver driver;
     DesiredCapabilities dc;
-    String query = ((MyThread)Thread.currentThread()).getQuery();
-    long start,end;
 
-    boolean isGrid = MyProperties.runOn.isGrid;
-    boolean isSimulator = query.contains("emulator") ? true : false;
     @Before
     public void setUp(){
         dc = new DesiredCapabilities();
 //        dc.setCapability("autoGrantPermissions",true);
 //        dc.setCapability("autoDismissAlerts",true);
         if(isGrid)
-            dc.setCapability("accessKey", MyProperties.runOn.AK);
+            dc.setCapability("accessKey", StartPanel.runOn.accesskey);
         dc.setCapability("deviceQuery", query);
-        if(MyProperties.makeReporter) {
+        if(ConfigManager.checkIfSetTrue("makeReporter")) {
             dc.setCapability("reportDirectory", "reports");
             dc.setCapability("reportFormat", "xml");
         }

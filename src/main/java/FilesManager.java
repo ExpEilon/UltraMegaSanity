@@ -2,22 +2,20 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class FileManager {
+public class FilesManager {
     private static final String root = System.getProperty("user.dir") + "//TestResultAt_" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis());
     private static final File rootDirectory = new File(root);
-    private static FileManager ourInstance = new FileManager();
+    private static FilesManager ourInstance = new FilesManager();
 
-    public static FileManager getInstance() {
+    public static FilesManager getInstance() {
         return ourInstance;
     }
 
-    private FileManager() {
+    private FilesManager() {
         rootDirectory.mkdir();
     }
     public static void initialize(List<String> devices){

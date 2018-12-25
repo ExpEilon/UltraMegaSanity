@@ -10,10 +10,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-public class ClearApplicationDataTestAp extends AppiumBaseTest {
+public class ClearApplicationDataTestAp extends AppiumBase {
 
     String clearPasswordApp = "Experitest.FingerPrintApp";
     String clearContainerApp = "com.experitest.ExperiBank";
@@ -23,7 +22,7 @@ public class ClearApplicationDataTestAp extends AppiumBaseTest {
     public void clearPassword() throws MalformedURLException {
         dc.setCapability(IOSMobileCapabilityType.BUNDLE_ID, clearPasswordApp);
         dc.setCapability("instrumentApp", true);
-        driver = new MyiOSDriver(new URL(MyProperties.runOn.getURL() + "/wd/hub"), dc);
+        driver = new MyiOSDriver(new URL(StartPanel.runOn.getURL() + "/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.findElement(By.xpath("//*[@accessibilityLabel='Delete Password']")).click();
         driver.findElement(By.xpath("//*[@accessibilityLabel='Finger Print Type III']")).click();
@@ -43,7 +42,7 @@ public class ClearApplicationDataTestAp extends AppiumBaseTest {
     public void clearContainer() throws IOException {
         dc.setCapability(IOSMobileCapabilityType.BUNDLE_ID, clearContainerApp);
         dc.setCapability("instrumentApp", true);
-        driver = new MyiOSDriver(new URL(MyProperties.runOn.getURL() + "/wd/hub"), dc);
+        driver = new MyiOSDriver(new URL(StartPanel.runOn.getURL() + "/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         if (isGrid && !isSimulator) {//we have api to get container only from cloud, can't use textIn command on simulators
             long containerSize;
@@ -52,10 +51,10 @@ public class ClearApplicationDataTestAp extends AppiumBaseTest {
 //            loginEriBank();
 //            makePayment();
             driver.resetApp();
-            containerSize = Files.size(Paths.get(BaseTest.getContainer(clearContainerApp)));
+            containerSize = Files.size(Paths.get(getContainer(clearContainerApp)));
             Assert.assertTrue("Container seems too large\n", containerSize < 1000);
 //            loginEriBank();
-//            accountAmount = client.getTextIn("NATIVE", MyProperties.instrumented ? "xpath=//*[@text='Make Payment']" : "xpath=//*[@text='makePaymentButton']", 0, MyProperties.instrumented ? "WEB" : "NATIVE", "Up", 0, 0);
+//            accountAmount = client.getTextIn("NATIVE", StartPanel.instrumented ? "xpath=//*[@text='Make Payment']" : "xpath=//*[@text='makePaymentButton']", 0, StartPanel.instrumented ? "WEB" : "NATIVE", "Up", 0, 0);
 //            Assert.assertTrue("Amount of money in EriBank didn't reset\n",!accountAmount.contains("100.00"));
         }
     }
@@ -65,7 +64,7 @@ public class ClearApplicationDataTestAp extends AppiumBaseTest {
 //        if(!installedInstrumented(clearSettingApp))
 //            client.install(clearSettingApp,true,false);
 //        dc.setCapability(IOSMobileCapabilityType.BUNDLE_ID, "com.apple.Preferences");
-        driver = new MyiOSDriver(new URL(MyProperties.runOn.getURL() + "/wd/hub"), dc);
+        driver = new MyiOSDriver(new URL(StartPanel.runOn.getURL() + "/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 //        SeeTestClient seeTestClient = new SeeTestClient(driver);
 //        seeTestClient.swipeWhileNotFound("DOWN",100,100,"NATIVE","//*[@text='UICatalog' and @class='UIAView' and @onScreen='true']",0,100,10,true);
