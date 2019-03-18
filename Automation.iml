@@ -11,11 +11,15 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/Simulators" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/SeeTest" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/gui" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: com.experitest:appium-seetest-extension:12.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jprocesses:jProcesses:1.6.4" level="project" />
+    <orderEntry type="library" name="Maven: com.profesorfalken:WMI4Java:1.6.1" level="project" />
+    <orderEntry type="library" name="Maven: com.profesorfalken:jPowerShell:1.9" level="project" />
     <orderEntry type="library" name="Maven: com.experitest:seetest-client:12.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlrpc:xmlrpc-client:3.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlrpc:xmlrpc-common:3.1.2" level="project" />

@@ -107,11 +107,11 @@ public class PerformanceTest extends SeeTestBase {
 
     private void lockDevice(){
         if(isGrid) {
-            gridClient = new GridClient(StartPanel.runOn.accesskey, StartPanel.runOn.getURL());
+            gridClient = new GridClient(runOn.accesskey, runOn.getURL());
             client = gridClient.lockDeviceForExecution("TestFile", query, 30, 300000);
         }
         else {
-            client = new MyClient(StartPanel.runOn.ip, StartPanel.runOn.port);
+            client = new MyClient(runOn.ip, runOn.port);
             client.waitForDevice(query,300000);
         }
     }

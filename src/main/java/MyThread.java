@@ -1,12 +1,10 @@
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import sun.misc.Lock;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class MyThread extends Thread {
@@ -14,16 +12,19 @@ public class MyThread extends Thread {
     Date now;
     SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private String query;
+    private DeviceController device;
     private String directory;
     private long duration;
     private Map<Class, RunSummary> summary;
     CommandsPerformance commandsSum;
     List<Class> tests;
     ProgressBarPanel progress;
-    MyPanel endPanel;
+    RunPanel endPanel;
+    boolean stopped = false;
     PrintStream out = null;
-    public MyThread(String query, List<Class> tests,ProgressBarPanel pBar,MyPanel panel) {
-        this.query = query;
+    public MyThread(DeviceController device, List<Class> tests, ProgressBarPanel pBar, RunPanel panel) {
+        this.device = device;
+        this.query = device.getSN();
         summary = new HashMap<>();
         commandsSum = new CommandsPerformance();
         this.tests = tests;
@@ -34,7 +35,7 @@ public class MyThread extends Thread {
             new File(directory).mkdir();
 
     }
-
+    public DeviceController getDevice(){return device;}
     public String getQuery() {
         return "@serialnumber = '" + query + "'" /*+ (query.split("-").length > 2 ? " and  @emulator='true'":"")*/;
     }
@@ -60,7 +61,7 @@ public class MyThread extends Thread {
         //initialize
         for (int i = 0; i < tests.size(); i++)
             summary.put(tests.get(i), new RunSummary(tests.get(i).getName()));
-        for (int i = 0; i < MyPanel.rounds* tests.size(); i++)
+        for (int i = 0; i < RunPanel.rounds* tests.size() && !stopped; i++)
             runTest(tests.get(i % tests.size()));
         endPanel.updateFinished();
     }
@@ -76,7 +77,7 @@ public class MyThread extends Thread {
             out.append(result.getFailures().stream().map(e ->e.getTrace()).collect(Collectors.joining("\n")));
         summary.put(test, summary.get(test).update(duration, sdFormat.format(now), result));
         writeToSummary(directory + "//AllResults.txt", sdFormat.format(now) + "    " + exc, true);
-        if (MyPanel.rounds > 1)
+        if (RunPanel.rounds > 1)
             writeToSummary(directory + "//Summary.txt", summary.entrySet().stream().map(e -> e.getValue().toString()).collect(Collectors.joining("\n")) +
                     "\n" + commandsSum.toString(), false);
         if(WriteSummary.needToWriteSummary())
@@ -94,5 +95,9 @@ public class MyThread extends Thread {
         }
         writer.println(data);
         writer.close();
+    }
+
+    public void terminate(){
+        stopped = true;
     }
 }

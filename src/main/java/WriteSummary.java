@@ -41,7 +41,7 @@ public class WriteSummary {
         return summary.exists();
     }
 
-    public synchronized static void createSummary(List<JCheckBox> list){
+    public synchronized static void createSummary(List<String> list){
         final List lineToUpdate = new ArrayList();
         try {
             if(summary.exists()) {
@@ -52,10 +52,10 @@ public class WriteSummary {
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
-        List filteredList = list.stream().filter(j -> !lineToUpdate.contains(j.getText())).collect(Collectors.toList());
+        List filteredList = list.stream().filter(j -> !lineToUpdate.contains(j)).collect(Collectors.toList());
         if(filteredList.size() > 0) {
-            list.stream().filter(j -> !lineToUpdate.contains(j.getText())).forEach(i -> MyThread.writeToSummary(summary.getPath(),
-                    i.getText() + ",0,0,0", true));
+            list.stream().filter(j -> !lineToUpdate.contains(j)).forEach(i -> MyThread.writeToSummary(summary.getPath(),
+                    i + ",0,0,0", true));
         }
     }
     public static File getRootDirectory(){

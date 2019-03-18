@@ -15,7 +15,6 @@ public class RecoveryTest extends SeeTestBase {
     String ip, url;
     boolean os10;
 
-
     @Test
     public void CyderRecovery() throws InterruptedException {
         os10 = Integer.parseInt(client.getDeviceProperty("os.version").split("\\.")[0]) <11 ? true:false;

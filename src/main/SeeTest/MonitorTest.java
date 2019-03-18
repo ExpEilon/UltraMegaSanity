@@ -12,10 +12,9 @@ public class MonitorTest extends SeeTestBase {
     @Test
     public void nonInstrumented(){
         client.setProperty("ios.auto.accept.alerts", "true");
-        client.startMonitor("com.apple.Maps");
-//        client.deviceAction("Home");
         client.launch("com.apple.Maps", true, true);
-
+        client.startMonitor("com.apple.Maps");
+        client.getVisualDump("NATIVE");
         // pinch
         client.startMultiGesture("test");
         // finger 0
@@ -44,17 +43,21 @@ public class MonitorTest extends SeeTestBase {
         client.multiTouchMoveCoordinate(250, 600, 0);
         client.multiTouchUp(0);
         client.performMultiGesture();
+        client.swipe("UP",100,100);
+        client.sleep(1000);
+        client.swipe("UP",100,100);
         Assert.assertTrue("CSV file has empty fields!",checkCSV(client.getMonitorsData(getFilePath(false))));
 
     }
 
     @Test
     public void instrumented() {
+//        client.setProperty("ios.11.use.old.monitoring.service","true");
         String appName = "com.experitest.ExperiBank";
         if(!installedInstrumented(appName))
             client.install(System.getProperty("user.dir")+"\\apps\\EriBank.ipa",true,false);
-        client.startMonitor(appName);
         client.launch(appName, true, true);
+        client.startMonitor(appName);
         client.elementSendText("NATIVE", "xpath=//*[@accessibilityIdentifier='usernameTextField']", 0, "company");
         client.elementSendText("NATIVE", "xpath=//*[@accessibilityIdentifier='passwordTextField']", 0, "company");
         client.click("NATIVE","xpath=//*[@accessibilityLabel='Login']", 0, 1);

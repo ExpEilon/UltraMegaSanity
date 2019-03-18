@@ -24,6 +24,9 @@ public class ForYoav {
     public void testUntitled() throws InterruptedException, IOException {
 
 
+//        for (int i = 0; i < 100; i++) {
+            Runtime.getRuntime().exec("cmd /c start  net STOP ecaservice");
+//        }
 //        while(true) {
 //            Runtime.getRuntime().exec("cmd /c start  net STOP ecaservice");
 //            Thread.sleep(6000);

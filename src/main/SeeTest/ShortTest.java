@@ -6,11 +6,16 @@ public class ShortTest extends SeeTestBase {
     String app = "com.experitest.UICatalog";
     @Test
     public void shortTest() {
-        client.install("cloud:uniqueName=chasepaypos_ios_q5_12202018",false,false);
+//        client.install("cloud:uniqueName=chasepaypos_ios_q5_12202018",false,false);
 //        client.applicationClearData(app);
 //        getContainer(app);
 //        client.applicationClearData("Experitest.FingerPrintApp");
-//        client.launch(appName, true, true);
+//        client.launch("https://secure.sterbcwm-usa.com", false, true);
+        System.out.println(client.getVisualDump("WEB").contains("loginForm:usridTxt"));
+//        client.click("NATIVE","xpath=//*[@id='Start']",0,1);
+//        client.click("NATIVE", "xpath=//*[@id='Lap']", 0, 10);
+//        client.click("NATIVE","xpath=//*[@id='Stop']",0,1);
+
 //        client.install("com.experitest.ExperiBank",true,true);
 //        client.setProperty("ios.instrumentation.log.level", "debug");
 //        client.launch("com.experitest.ExperiBank",true,true);

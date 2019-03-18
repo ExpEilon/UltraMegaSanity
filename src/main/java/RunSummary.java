@@ -1,3 +1,5 @@
+import org.openqa.selenium.NoSuchElementException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +28,10 @@ public class RunSummary {
         if(result.wasSuccessful())
             this.success++;
         else{
+            Throwable e = result.getFailures().get(0).getException();
+            if(e instanceof NoSuchElementException){
+                // TO DO extract element Info from message
+            }
             String err = result.getFailures().get(0).getException().getMessage();
             if(excSum.get(err) == null)
                 excSum.put(err,1);

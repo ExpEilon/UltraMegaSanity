@@ -13,7 +13,8 @@ public abstract class SeeTestBase extends BaseTest{
     protected Client client = null;
     protected GridClient gridClient = null;
     Map<String, Object> launchOptionsMap;
-    boolean createContainer = MyProperties.createContainer && StartPanel.runOn.isGrid;
+
+    boolean createContainer = MyProperties.createContainer && runOn.isGrid;
     String app;
 
     @Before
@@ -21,11 +22,11 @@ public abstract class SeeTestBase extends BaseTest{
         if (!(this instanceof PerformanceTest)) {
             start = System.currentTimeMillis();
             if (isGrid) {
-                gridClient = new GridClient(StartPanel.runOn.accesskey, StartPanel.runOn.getURL());
+                gridClient = new GridClient(runOn.accesskey, runOn.getURL());
                 if (isGrid && ConfigManager.checkIfSetTrue("videoRecording"))
                     gridClient.enableVideoRecording();
             } else
-                client = new MyClient(StartPanel.runOn.ip, StartPanel.runOn.port);
+                client = new MyClient(runOn.ip, runOn.port);
             if (isGrid)
                 client = gridClient.lockDeviceForExecution("TestFile", query, 30, 300000);
             else
@@ -46,6 +47,7 @@ public abstract class SeeTestBase extends BaseTest{
                 client.setReporter("xml", projectBaseDirectory + "//Reporter", this.getClass().getName());
             if (ConfigManager.checkIfSetTrue("videoRecording"))
                 client.startVideoRecord();
+//            client.setProperty("ios.debug.webinspector.connection","true");
         }
     }
 

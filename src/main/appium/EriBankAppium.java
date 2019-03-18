@@ -12,7 +12,7 @@ public class EriBankAppium extends AppiumBase {
 
     @Test
     public void testUntitled() throws MalformedURLException, InterruptedException {
-        driver = new MyiOSDriver(new URL(StartPanel.runOn.getURL() + "/wd/hub"), dc);
+        driver = new MyiOSDriver(new URL(runOn.getURL() + "/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         if(driver.isAppInstalled("com.experitest.ExperiBank"))

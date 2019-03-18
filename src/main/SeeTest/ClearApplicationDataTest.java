@@ -31,7 +31,6 @@ public class ClearApplicationDataTest extends SeeTestBase {
         Assert.assertTrue("Keychain wasn't cleared!\n",client.isElementFound("NATIVE", "//*[@accessibilityLabel='Enter password to save']", 0));
     }
 
-    @Ignore
     @Test
     public void clearContainer() throws IOException {
         if (isGrid && !isSimulator) {//we have api to get container only from cloud, can't use textIn command on simulators
@@ -42,17 +41,16 @@ public class ClearApplicationDataTest extends SeeTestBase {
             makePayment();
             client.applicationClearData(clearContainerApp);
             containerSize = Files.size(Paths.get(getContainer(clearContainerApp)));
-            Assert.assertTrue("Container seems too large\n", containerSize < 1000);
+            Assert.assertTrue("Container seems too large\n", containerSize < 2000);
             loginEriBank();
             accountAmount = client.getTextIn("NATIVE","xpath=//*[@text='Make Payment']", 0, MyProperties.instrumented ? "WEB" : "NATIVE", "Up", 0, 0);
-            Assert.assertTrue("Amount of money in EriBank didn't reset\n",!accountAmount.contains("100.00"));
+            Assert.assertTrue("Amount of money in EriBank didn't reset\n",accountAmount.contains("100.00"));
         }
     }
 
     @Test
     public void clearSettings() throws InterruptedException {
-        if(!installedInstrumented(clearSettingApp))
-            client.install(clearSettingApp,true,false);
+        client.install(System.getProperty("user.dir")+"\\apps\\UICatalog.ipa",true,false);
         client.launch("com.apple.Preferences",true,true);
         client.swipeWhileNotFound("DOWN",100,100,"NATIVE","//*[@text='UICatalog' and @class='UIAView' and @onScreen='true']",0,100,10,true);
         sleep(1000);

@@ -9,6 +9,7 @@ import io.appium.java_client.remote.IOSMobileCapabilityType;
 import io.appium.java_client.remote.MobileBrowserType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -27,12 +28,12 @@ import static java.lang.Thread.sleep;
 
 public class TouchActioniOS {
 //    protected AndroidDriver<AndroidElement> driver = null;
-    AppiumDriver driver;
+    IOSDriver driver;
     SeeTestClient seeTestClient;
     @Before
     public void setUp() throws MalformedURLException {
         DesiredCapabilities dc = new DesiredCapabilities();
-        dc.setCapability(MobileCapabilityType.UDID, "45a8ec778b1e6eb400e828cb989be9934fc03a8b");
+        dc.setCapability(MobileCapabilityType.UDID, "f759ec5d8343175b2c68f856c9c47559aa1fc0fc");
 //        dc.setCapability(IOSMobileCapabilityType.BUNDLE_ID, "com.experitest.UICatalog");
 //        dc.setCapability("appiumVersion", "1.8");
 //        dc.setCapability("username", "khaleda");
@@ -47,15 +48,30 @@ public class TouchActioniOS {
 
     @Test
     public void testUntitled() throws InterruptedException {
-        driver.context("WEBVIEW_1");
-        WebElement searchBar = driver.findElement(By.xpath("//*[@name='q']"));
-        searchBar.sendKeys("Experitest");
-        searchBar.sendKeys(Keys.ENTER);
-
-        //AS-25801 test for input String/Int/Null/List/WebElement/boolean/Undefined
-//        driver.get("http://www.google.com");
+//        for (int i = 0; i < 100; i++) {
+//            new SeeTestClient(driver).hybridClearCache();
+//            driver.get("http://192.168.4.85:8060/html-tests/AppiumWeb/HibridApplicationHtml.html");
+//        }
+//        long start = System.currentTimeMillis();
+//        while((System.currentTimeMillis() - start) / 1000 < 300) {
+//            try {
+//                driver.findElement(By.xpath("//*[@name='qaa']"));
+//            } catch (Exception e) {
+//            }
+//        }
 //        driver.context("WEBVIEW_1");
-//        List<Long> l = (List<Long>) driver.executeScript("return [1,'abc','abc']");
+//        WebElement searchBar = driver.findElement(By.xpath("//*[@name='q']"));
+//        searchBar.sendKeys("Experitest");
+//        searchBar.sendKeys(Keys.ENTER);
+//        new SeeTestClient(driver).getDevicesInformation();
+        //AS-25801 test for input String/Int/Null/List/WebElement/boolean/Undefined
+        driver.get("http://192.168.4.85:8060/html-tests/Old-Pages/NavotHTML/TestJS_2.html");
+        driver.context("WEBVIEW_1");
+        System.out.println(driver.executeScript("return document.getElementsByName('Add Click Button 01');"));
+//        System.out.println(((List) driver.executeScript("return document.getElementsByTagName('script');")).get(0));
+//        Assert.assertTrue("executeScript didn't work for List returned value", driver.executeScript("return document.getElementsByTagName('style');") instanceof List);
+
+//        List<Long> l = (List<Long>) driver.executeScript("return ['abc','abc']");
 
 //        driver.executeScript("return [1,'abc']");
 //        ((JavascriptExecutor)driver).executeScript("arguments[0].click()", ele);

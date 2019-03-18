@@ -10,7 +10,7 @@ public class AppiumSafariTest extends AppiumBase {
 
     @Test
     public void testUntitled() throws Exception {
-        driver = new MyiOSDriver(new URL(StartPanel.runOn.getURL() + "/wd/hub"), dc);
+        driver = new MyiOSDriver(new URL(runOn.getURL() + "/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         if(ConfigManager.checkIfSetTrue("makeReporter"))
             System.out.println((String) driver.getCapabilities().getCapability("reportUrl"));
@@ -26,7 +26,7 @@ public class AppiumSafariTest extends AppiumBase {
         driver.get("https://www.wikipedia.org/");
         if(!driver.isElementFound(By.xpath("//*[@nodeName='IMG']")))
             throw new Exception("Couldn't find wikipedia homepage picture");
-        Assert.assertTrue("Didn't get chinese text as well",
+        Assert.assertTrue("Didn't get chinese text",
                 (driver.findElement(By.xpath("//*[@nodeName='STRONG' and ./parent::*[@id='js-link-box-zh']]")).getText().equals("中文")));
     }
 }

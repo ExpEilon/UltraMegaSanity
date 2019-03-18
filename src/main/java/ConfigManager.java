@@ -1,14 +1,49 @@
 import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.*;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConfigManager {
-    static Connection runOn;
+    private static ConfigManager ourInstance = new ConfigManager();
+
+    public static ConfigManager getInstance() {
+        return ourInstance;
+    }
+
+    private ConfigManager() {}
+
+//    static ConfigManager.Connection runOn;
+
+    static ArrayList<Class> tests = new ArrayList<>();
+
+    static ArrayList<DeviceController> devices = new ArrayList<>();
 
     private static String directory = System.getProperty("user.dir") + "//Configurations//config.properties";
+
+    static public List<String> devicesToStringArray(){
+        return devices.stream().map(d -> d.getProperty("SN")).collect(Collectors.toList());
+    }
+
+    public static void addDevice(DeviceController device){
+        if(devices.stream().filter(d -> d.getProperty("SN").equals(device.getProperty("SN"))).count() == 0)
+            devices.add(device);
+    }
+
+    public static void removeDevice(DeviceController device){
+        Optional<DeviceController> deviceToDelete = devices.stream().filter(d -> d.getProperty("SN").equals(device.getProperty("SN"))).findFirst();
+        if(deviceToDelete.isPresent())
+            devices.remove(deviceToDelete.get());
+    }
+
+    public static void updateTests(List<Class> testsList,TestsPanel.TYPE type){
+        //find the classes to delete (all of the type)
+        List<Class> toDelete = tests.stream().filter(t -> Arrays.asList(TestsPanel.TESTS.get(type)).stream().anyMatch(typeTests -> typeTests.getName().equals(t.getName()))).collect(Collectors.toList());
+        toDelete.stream().forEach(t -> tests.remove(t));
+        if(testsList.size() > 0)
+            testsList.stream().forEach(t -> tests.add(t));
+    }
 
     public static void addCloud(JSONObject json){
         JSONObject jsonObjectOfArray = new JSONObject((String)getProp("connections"));
@@ -111,12 +146,12 @@ public class ConfigManager {
     }
 
 
-    public static void setRunOn(String json){
+    public static ConfigManager.Connection getRunOnFromJson(String json){
         Gson gson = new Gson();
-        runOn = gson.fromJson(json,Connection.class);
+        return gson.fromJson(json, ConfigManager.Connection.class);
     }
 
-    public static void initilizeConn(){
+    public static void initializeConn(){
         JSONObject jsonObjectOfArray = new JSONObject((String)getProp("connections"));
         if(!jsonObjectOfArray.has("connArray"))
             jsonObjectOfArray = new JSONObject().put("connArray", new JSONArray());
@@ -158,4 +193,5 @@ public class ConfigManager {
             return ip+":"+port;
         }
     }
+
 }
