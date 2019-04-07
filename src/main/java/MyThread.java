@@ -11,37 +11,23 @@ public class MyThread extends Thread {
     String exc = "";
     Date now;
     SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private String query;
     private DeviceController device;
-    private String directory;
     private long duration;
     private Map<Class, RunSummary> summary;
     CommandsPerformance commandsSum;
-    List<Class> tests;
-    ProgressBarPanel progress;
-    RunPanel endPanel;
-    boolean stopped = false;
     PrintStream out = null;
-    public MyThread(DeviceController device, List<Class> tests, ProgressBarPanel pBar, RunPanel panel) {
+
+    public MyThread(DeviceController device) {
         this.device = device;
-        this.query = device.getSN();
         summary = new HashMap<>();
         commandsSum = new CommandsPerformance();
-        this.tests = tests;
-        progress = pBar;
-        endPanel = panel;
-        directory = System.getProperty("user.dir") + "//TestResult" + "//" + query;
-        if(!new File(directory).exists())
-            new File(directory).mkdir();
-
+        if(!new File(device.getDirectory()).exists())
+            new File(device.getDirectory()).mkdir();
     }
     public DeviceController getDevice(){return device;}
-    public String getQuery() {
-        return "@serialnumber = '" + query + "'" /*+ (query.split("-").length > 2 ? " and  @emulator='true'":"")*/;
-    }
 
-    public String getDirectory() {
-        return directory;
+    public String getQuery() {
+        return "@serialnumber = '" + device.getSN() + "'" /*+ (query.split("-").length > 2 ? " and  @emulator='true'":"")*/;
     }
 
     public void setDuration(long d) {
@@ -50,20 +36,24 @@ public class MyThread extends Thread {
 
     @Override
     public void run() {
-        if(ConfigManager.checkIfSetTrue("saveClientLogToFile")) {
+//        if(ConfigManager.checkIfSetTrue("saveClientLogToFile")) {
             try {
-                out = new PrintStream(new FileOutputStream(directory + "//Client.log"));
-                System.setOut(out);
+                out = new PrintStream(new FileOutputStream(device.getClientLog()));
+                ((ThreadPrintStream)System.out).setThreadOut(out);
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+//        }
         //initialize
-        for (int i = 0; i < tests.size(); i++)
-            summary.put(tests.get(i), new RunSummary(tests.get(i).getName()));
-        for (int i = 0; i < RunPanel.rounds* tests.size() && !stopped; i++)
-            runTest(tests.get(i % tests.size()));
-        endPanel.updateFinished();
+        for (int i = 0; i < ConfigManager.tests.size(); i++)
+            summary.put(ConfigManager.tests.get(i), new RunSummary(ConfigManager.tests.get(i).getName()));
+
+        for (int i = 0; i < ConfigManager.rounds* ConfigManager.tests.size() && !isInterrupted(); i++)
+            runTest(ConfigManager.tests.get(i % ConfigManager.tests.size()));
+
+        ManagerOfGui.getInstance().getEndIsComingPanel().updateFinished();
+        out.close();
     }
 
     private void runTest(Class test) {
@@ -76,16 +66,16 @@ public class MyThread extends Thread {
         if(ConfigManager.checkIfSetTrue("saveClientLogToFile"))
             out.append(result.getFailures().stream().map(e ->e.getTrace()).collect(Collectors.joining("\n")));
         summary.put(test, summary.get(test).update(duration, sdFormat.format(now), result));
-        writeToSummary(directory + "//AllResults.txt", sdFormat.format(now) + "    " + exc, true);
-        if (RunPanel.rounds > 1)
-            writeToSummary(directory + "//Summary.txt", summary.entrySet().stream().map(e -> e.getValue().toString()).collect(Collectors.joining("\n")) +
+        writeToFile(device.getAllResultDirectory(), sdFormat.format(now) + "    " + exc, true);
+        if (ConfigManager.rounds > 1)
+            writeToFile(device.getSummaryDirectory(), summary.entrySet().stream().map(e -> e.getValue().toString()).collect(Collectors.joining("\n")) +
                     "\n" + commandsSum.toString(), false);
         if(WriteSummary.needToWriteSummary())
-            WriteSummary.update(query,result.wasSuccessful());
-        progress.updateBar(result.wasSuccessful());
+            WriteSummary.update(device.getSN(),result.wasSuccessful());
+        device.getProgressBarPanel().updateBar(result.wasSuccessful());
     }
 
-    public static void writeToSummary(String directory, String data, boolean append) {
+    public static void writeToFile(String directory, String data, boolean append) {
         PrintWriter writer = null;
         File writeTo = new File(directory);
         try {
@@ -95,9 +85,5 @@ public class MyThread extends Thread {
         }
         writer.println(data);
         writer.close();
-    }
-
-    public void terminate(){
-        stopped = true;
     }
 }

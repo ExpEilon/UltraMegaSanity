@@ -24,7 +24,7 @@ public class AppiumBase extends BaseTest{
 //        dc.setCapability("autoGrantPermissions",true);
 //        dc.setCapability("autoDismissAlerts",true);
         if(isGrid)
-            dc.setCapability("accessKey", runOn.accesskey);
+            dc.setCapability("accessKey", runOn.getAccesskey());
         dc.setCapability("deviceQuery", query);
         if(ConfigManager.checkIfSetTrue("makeReporter")) {
             dc.setCapability("reportDirectory", "reports");

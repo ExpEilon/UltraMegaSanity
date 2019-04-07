@@ -17,12 +17,11 @@ public class RunPanel extends JPanel implements ActionListener {
     JTextField numRounds;
     HashMap<TestsPanel.TYPE,JButton> testsButtons;
     static List<DeviceController> listDevices;
-    static int rounds = 1;
     private static int finished = 0;
 
     public RunPanel(){
         JScrollPane scrollFrame = new JScrollPane(new JPanel());
-        scrollFrame.setPreferredSize(new Dimension( 1200,300));
+        scrollFrame.setPreferredSize(new Dimension( ConfigManager.WIDTH,ConfigManager.HEIGHT));
         setAutoscrolls(true);
         add(scrollFrame,BorderLayout.CENTER);
     }
@@ -51,7 +50,7 @@ public class RunPanel extends JPanel implements ActionListener {
         buttom.add(bStart);
         add(buttom,BorderLayout.SOUTH);
         JScrollPane scrollFrame = new JScrollPane(new DevicesPanel((ArrayList<DeviceController>) listDevices));
-        scrollFrame.setPreferredSize(new Dimension( 1200,300));
+        scrollFrame.setPreferredSize(new Dimension( ConfigManager.WIDTH,ConfigManager.HEIGHT));
         setAutoscrolls(true);
         add(scrollFrame,BorderLayout.CENTER);
     }
@@ -62,19 +61,9 @@ public class RunPanel extends JPanel implements ActionListener {
             if(!validRounds())
                 return;
             removeAll();
+            WriteSummary.createRoot();
             WriteSummary.createSummary(ConfigManager.devicesToStringArray());
-            JPanel gridProgress = new JPanel(new GridLayout(ConfigManager.devicesToStringArray().size(),1));
-            ConfigManager.devices.forEach(d -> {
-                ProgressBarPanel it = new ProgressBarPanel(ConfigManager.tests.size()*rounds,d.getSN());
-                gridProgress.add(it);
-                MyThread thread = new MyThread(d,ConfigManager.tests,it,this);
-                thread.setName(d.getSN());
-                ManagerOfGui.getInstance().addThread(thread);
-                thread.start();
-            });
-            setLayout(new BorderLayout());
-            add(gridProgress,BorderLayout.CENTER);
-            SwingUtilities.getWindowAncestor(this).pack();
+            ManagerOfGui.letsStart(false);
          }
          else{
             new TestsPanel(testsButtons.entrySet().stream().filter(b -> e.getSource() == b.getValue()).findFirst().get().getKey());
@@ -90,12 +79,12 @@ public class RunPanel extends JPanel implements ActionListener {
 
     private boolean validRounds(){
         try {
-            rounds = Integer.parseInt(numRounds.getText());
+            ConfigManager.rounds = Integer.parseInt(numRounds.getText());
         }catch (NumberFormatException ex) {
             createErrorDialog("Please enter a number in the rounds field");
             return false;
         }
-        if(rounds<1) {
+        if(ConfigManager.rounds<1) {
             createErrorDialog("Please enter a positive number in the rounds field");
             return false;
         }
@@ -116,7 +105,6 @@ public class RunPanel extends JPanel implements ActionListener {
         if(finished==ConfigManager.devicesToStringArray().size()){
             bExit = new JButton("Exit");
             bLog = new JButton("Log File");
-//            bFinished.setText("Finished :)");
             bExit.addActionListener(e -> System.exit(0));
             bLog.addActionListener(e -> {
                 try {

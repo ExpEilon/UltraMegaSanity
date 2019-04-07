@@ -11,7 +11,7 @@ public class MyProperties {
             ClearApplicationDataTestAp.class,ClearApplicationDataAutomation.class};//for new iOS OS
 //    static Class[] tests = {EriBankTest.class,PressTheDotTest.class,SafariSameTab.class,SafariLongRun.class,DeviceActions.class,DeviceProperty.class,MonitorTest.class};//for general run
 //    static Class[] tests = {SafariLongRun.class};//Appium sanity
-    static int numOfRuns = 1000;
+//    static int numOfRuns = 1000;
 //    static boolean installFromPath = true;
     static boolean instrumented = false;
 //    static boolean makeReporter = false;
@@ -28,7 +28,7 @@ public class MyProperties {
     enum Connection{
 //        CloudWindows ("https://eilongrodsky-pc",443,"eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVek16SXhNekkzTmpZek9RIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NDg1NzMyNzYsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.XsuzHTOHBmFawHabJYTOnr5fbjA17HhzQurSjzBBEnw",
 //                "admin","Experitest2012",true),
-        CloudWindows ("http://192.168.2.22",9000,"eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVMU1USTRNREExTWpVek1RIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NjY2NDAwNTIsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.PrfO8A3rW0uBM2E925U_xECBhPrj1sPEfmIXT3229dM",
+        CloudWindows ("http://192.168.2.22",9000,"eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVMU5ERXlNREE1TlRJNU9RIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4Njk0ODAwOTUsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.8fOZNwz582zhuFbA08p_ysF94L4v9IzSzfTSYXuhGEk",
                 "admin","Experitest2012",true),
         CloudMac ("http://192.168.2.29",9000,"eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVME1ESXlOVE00TWpnMk9BIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NTU1ODUzODMsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.REsnj_ETp0ajEpl40eMhQvI7vU-O0We87LKBqAWiFM0",
                 "admin","Qwer1234",true),

@@ -14,11 +14,14 @@ public class ConfigManager {
 
     private ConfigManager() {}
 
-//    static ConfigManager.Connection runOn;
+    static public final int WIDTH = 1200;
+    static public final int HEIGHT = 300;
+    static  public int rounds = 1;
+
 
     static ArrayList<Class> tests = new ArrayList<>();
 
-    static ArrayList<DeviceController> devices = new ArrayList<>();
+    private static ArrayList<DeviceController> devices = new ArrayList<>();
 
     private static String directory = System.getProperty("user.dir") + "//Configurations//config.properties";
 
@@ -30,6 +33,8 @@ public class ConfigManager {
         if(devices.stream().filter(d -> d.getProperty("SN").equals(device.getProperty("SN"))).count() == 0)
             devices.add(device);
     }
+
+    public static ArrayList<DeviceController> getDevices(){return devices;}
 
     public static void removeDevice(DeviceController device){
         Optional<DeviceController> deviceToDelete = devices.stream().filter(d -> d.getProperty("SN").equals(device.getProperty("SN"))).findFirst();
@@ -66,6 +71,27 @@ public class ConfigManager {
         return connections;
     }
 
+    public static Properties getProperties(){
+        FileInputStream in = null;
+        Properties props = new Properties();
+        try {
+            in = new FileInputStream(directory);
+            props.load(in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                return props;
+            }
+        }
+    }
+
     public static Object getProp(String propName){
         Properties prop = new Properties();
         InputStream input = null;
@@ -92,6 +118,7 @@ public class ConfigManager {
             return false;
         return true;
     }
+
     public static void setProp(String key,Object value){
         OutputStream output = null;
         FileInputStream in = null;
@@ -176,7 +203,7 @@ public class ConfigManager {
     }
 
     public static class Connection{
-        String name,ip,accesskey,username,password;
+        private String name,ip,accesskey,username,password;
         int port;
         boolean isGrid;
 
@@ -188,6 +215,26 @@ public class ConfigManager {
             this.password = password;
             this.port = port;
             this.isGrid = isGrid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getAccesskey() {
+            return accesskey;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getIp() {
+            return ip;
         }
         public String getURL(){
             return ip+":"+port;

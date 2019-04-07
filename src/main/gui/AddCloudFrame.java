@@ -5,50 +5,43 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-//public class AddCloudFrame extends JFrame {
-//    TheFatherPanel panel;
-//    public AddCloudFrame(TheFatherPanel panel) {
-//        super("Add Cloud");
-//        add(new LocalPanel());
-//        pack();
-//        setLocationRelativeTo(null);
-//        setVisible(true);
-//        this.panel = panel;
-//    }
-
-
     class AddCloudFrame extends JPanel implements ActionListener {
         JButton bAdd;
         JLabel lName, lUrl, lAccesskey, lUsername, lPassword;
         JTextField tName, tUrl, tAccesskey, tUsername, tPassword;
-
-        public AddCloudFrame() {
+        ConfigManager.Connection conn;
+        public AddCloudFrame(ConfigManager.Connection conn) {
             super();
+            this.conn = conn;
             setLayout(new BorderLayout(5,5));
-            JPanel lables = new JPanel(new GridLayout(0,1));
-            JPanel tfields = new JPanel(new GridLayout(0,1));
-//            setLayout(new GridLayout(6, 2));
+            JPanel labels = new JPanel(new GridLayout(0,1));
+            JPanel tFields = new JPanel(new GridLayout(0,1));
             lName = new JLabel("Name: ");
             lUrl = new JLabel("Url: ");
             lAccesskey = new JLabel("Accesskey: ");
             lUsername = new JLabel("Username: ");
             lPassword = new JLabel("Password: ");
-            tName = new JTextField();
-            tUrl = new JTextField();
-            tAccesskey = new JTextField();
-            tUsername = new JTextField();
-            tPassword = new JTextField();
-            lables.add(lName);
-            tfields.add(tName);
-            lables.add(lUrl);
-            tfields.add(tUrl);
-            lables.add(lAccesskey);
-            tfields.add(tAccesskey);
-            lables.add(lUsername);
-            tfields.add(tUsername);
-            lables.add(lPassword);
-            tfields.add(tPassword);
-            bAdd = new JButton("Save");
+            if(conn == null)
+                tName = new JTextField();
+            else {
+                tName = new JTextField(conn.getName());
+                tName.setEditable(false);
+            }
+            tUrl = conn == null ? new JTextField() : new JTextField(conn.getURL());
+            tAccesskey = conn == null ? new JTextField(2) : new JTextField(conn.getAccesskey(),2);
+            tUsername = conn == null ? new JTextField() : new JTextField(conn.getUsername());
+            tPassword = conn == null ? new JTextField() : new JTextField(conn.getPassword());
+            labels.add(lName);
+            tFields.add(tName);
+            labels.add(lUrl);
+            tFields.add(tUrl);
+            labels.add(lAccesskey);
+            tFields.add(tAccesskey);
+            labels.add(lUsername);
+            tFields.add(tUsername);
+            labels.add(lPassword);
+            tFields.add(tPassword);
+            bAdd = conn == null ? new JButton("Save") : new JButton("Save Changes");
             bAdd.addActionListener(this);
             JPanel bPanel = new JPanel(new GridLayout(1,5));
             bPanel.add(new JLabel());
@@ -56,17 +49,56 @@ import java.awt.event.ActionListener;
             bPanel.add(bAdd);
             bPanel.add(new JLabel());
             bPanel.add(new JLabel());
+            JPanel centerPanel = new JPanel(new BorderLayout());
             add(bPanel,BorderLayout.SOUTH);
-            add(lables,BorderLayout.WEST);
-            add(tfields,BorderLayout.CENTER);
+            centerPanel.add(labels,BorderLayout.WEST);
+            centerPanel.add(tFields,BorderLayout.CENTER);
+            JPanel emptyPanel = new JPanel();
+            emptyPanel.setPreferredSize(new Dimension(370,ConfigManager.HEIGHT-180));
+            JPanel emptyPane2 = new JPanel();
+            emptyPane2.setPreferredSize(new Dimension(350,ConfigManager.HEIGHT-180));
+
+            add(emptyPanel,BorderLayout.EAST);
+            add(centerPanel,BorderLayout.CENTER);
+            add(emptyPane2,BorderLayout.WEST);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == bAdd) {
-                ConfigManager.addCloud(createCloudJson());
-                ManagerOfGui.getInstance().getTheFatherPanel().addConn(tName.getText());
+                if(tName.getText().equals(""))
+                    createErrorDialog("Must enter name!");
+                else if(tUrl.getText().equals(""))
+                    createErrorDialog("Must enter an URL!");
+                else if(tAccesskey.getText().equals(""))
+                    createErrorDialog("Must enter accesskey!");
+                else if(ConfigManager.getConn(tName.getText()) != null && conn == null)
+                    createErrorDialog("Name exists, please choose other name");
+                else {
+                    if(tUsername.getText().equals("") || tPassword.getText().equals("")) {
+                        int response = JOptionPane.showConfirmDialog(null,
+                                "Didn't enter username or password!\nSome tests might not work\nDo you want to save anyway?", "Warning",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                        if(response == JOptionPane.YES_OPTION)
+                            saveConn();
+                    }
+                    else
+                        saveConn();
+                }
             }
+        }
+
+        private void saveConn(){
+            if(conn != null)
+                ConfigManager.deleteConnection(conn.getName());
+            ConfigManager.addCloud(createCloudJson());
+            if(conn == null)
+                ManagerOfGui.getInstance().getTheFatherPanel().addConn(tName.getText());
+            JOptionPane.showMessageDialog(null,
+                    "Saved Successfully",
+                    "Saved",
+                    JOptionPane.INFORMATION_MESSAGE);
+//            ManagerOfGui.getInstance().getTheFatherPanel().getRunOnBox().setSelectedItem(tName.getText());
         }
 
         private JSONObject createCloudJson() {
@@ -97,5 +129,11 @@ import java.awt.event.ActionListener;
                 .put("isGrid", isGrid);
         return json;
     }
+        private void createErrorDialog(String message){
+            JOptionPane.showMessageDialog(null,
+                    message,
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
 
-}
+    }

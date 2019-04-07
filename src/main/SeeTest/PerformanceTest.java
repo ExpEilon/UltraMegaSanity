@@ -42,7 +42,6 @@ public class PerformanceTest extends SeeTestBase {
     Map<String,ArrayList<Integer>> results;
     @Test
     public void webPerformance(){
-//        createActualMap();
         initilize();
         meanExpected.keySet().stream().forEach(k -> results.put(k,new ArrayList<>()));
         IntStream.range(0,ROUNDS).forEach(i -> meanExpected.keySet().stream().forEach(k -> results.get(k).add((int)getCommandTime(k)))); //runs one round);
@@ -53,12 +52,7 @@ public class PerformanceTest extends SeeTestBase {
                 results.get(k).stream().mapToInt(a->
                 (int) Math.pow(a-mean.get(k),2)).sum()/ROUNDS)));
 
-        WriteSummary.writeToFile(new File(WriteSummary.root+"//Performance.txt"),MyThread.currentThread().getName() + "\nMean: " + mean.toString()  +"\nDeviation: " + deviation.toString());
-//        timesExpected.keySet().stream().forEach(k ->{
-//            long l = timesActual.get(k)/ROUNDS;
-//            Assert.assertTrue("Command: " + k + " took " + l +" instead of less than " + timesExpected.get(k),l < timesExpected.get(k));
-//
-//        });
+        WriteSummary.writeToFile(new File(WriteSummary.getRoot()+"//Performance.txt"),MyThread.currentThread().getName() + "\nMean: " + mean.toString()  +"\nDeviation: " + deviation.toString());
     }
 
     private void initilize(){
@@ -107,11 +101,11 @@ public class PerformanceTest extends SeeTestBase {
 
     private void lockDevice(){
         if(isGrid) {
-            gridClient = new GridClient(runOn.accesskey, runOn.getURL());
+            gridClient = new GridClient(runOn.getAccesskey(), runOn.getURL());
             client = gridClient.lockDeviceForExecution("TestFile", query, 30, 300000);
         }
         else {
-            client = new MyClient(runOn.ip, runOn.port);
+            client = new MyClient(runOn.getIp(), runOn.port);
             client.waitForDevice(query,300000);
         }
     }

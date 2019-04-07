@@ -74,7 +74,7 @@ public class TheChosenPanel extends JPanel {
         dtm.addRow(labelsToBold());
         JTable devicesTable = new JTable(dtm);
 
-        ConfigManager.devices.stream().forEach(d -> {
+        ConfigManager.getDevices().stream().forEach(d -> {
             Vector v = new Vector();
             Arrays.asList(labels).stream().map(s -> d.getProperty(s)).forEach(l -> v.add(l));
             dtm.addRow(v);

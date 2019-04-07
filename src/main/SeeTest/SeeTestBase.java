@@ -4,6 +4,10 @@ import org.junit.After;
 import org.junit.Before;
 import com.experitest.client.Client;
 import com.experitest.client.GridClient;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,7 +17,6 @@ public abstract class SeeTestBase extends BaseTest{
     protected Client client = null;
     protected GridClient gridClient = null;
     Map<String, Object> launchOptionsMap;
-
     boolean createContainer = MyProperties.createContainer && runOn.isGrid;
     String app;
 
@@ -22,11 +25,11 @@ public abstract class SeeTestBase extends BaseTest{
         if (!(this instanceof PerformanceTest)) {
             start = System.currentTimeMillis();
             if (isGrid) {
-                gridClient = new GridClient(runOn.accesskey, runOn.getURL());
+                gridClient = new GridClient(runOn.getAccesskey(), runOn.getURL());
                 if (isGrid && ConfigManager.checkIfSetTrue("videoRecording"))
                     gridClient.enableVideoRecording();
             } else
-                client = new MyClient(runOn.ip, runOn.port);
+                client = new MyClient(runOn.getIp(), runOn.port);
             if (isGrid)
                 client = gridClient.lockDeviceForExecution("TestFile", query, 30, 300000);
             else
@@ -64,6 +67,7 @@ public abstract class SeeTestBase extends BaseTest{
 //                .field("file", f)
 //                .asJson ();
 //        System.out.println(response.getBody().toString());
+
             if (ConfigManager.checkIfSetTrue("videoRecording"))
                 client.getRemoteFile(client.stopVideoRecord(), 200000, projectBaseDirectory);
             if (ConfigManager.checkIfSetTrue("makeReporter"))

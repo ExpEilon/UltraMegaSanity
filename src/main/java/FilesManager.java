@@ -18,10 +18,12 @@ public class FilesManager {
     private FilesManager() {
         rootDirectory.mkdir();
     }
+
     public static void initialize(List<String> devices){
-        IntStream.range(0,devices.size()).forEach(i -> MyThread.writeToSummary(System.getProperty("user.dir") +"//TestResult//Summary.txt",
+        IntStream.range(0,devices.size()).forEach(i -> MyThread.writeToFile(System.getProperty("user.dir") +"//TestResult//Summary.txt",
                 devices.get(i)+",0,0,0",true));
     }
+
     public static void createDirectory(String path){
         File file = new File(root + path);
         if (!file.exists())

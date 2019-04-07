@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 public class BaseTest {
     ConfigManager.Connection runOn = ((MyThread)Thread.currentThread()).getDevice().getConn();
     boolean isGrid = runOn.isGrid;
-    protected String projectBaseDirectory = ((MyThread)Thread.currentThread()).getDirectory();
+    protected String projectBaseDirectory = ((MyThread)Thread.currentThread()).getDevice().getDirectory();
     static SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
     long start,end,duration;
     String query = ((MyThread)Thread.currentThread()).getQuery();
@@ -24,7 +24,7 @@ public class BaseTest {
 
     protected int getDeviceId() throws UnirestException {
         HttpResponse<JsonNode> response1 = Unirest.get(runOn.getURL()+"/api/v1/devices")
-                .basicAuth(runOn.username, runOn.password)
+                .basicAuth(runOn.getUsername(), runOn.getPassword())
                 .asJson();
         JSONArray jsonArray = response1.getBody().getObject().getJSONArray("data");
         return IntStream.range(0,jsonArray.length()).mapToObj(i->jsonArray.getJSONObject(i)).collect(Collectors.toList()).stream()
@@ -35,7 +35,7 @@ public class BaseTest {
         String path = projectBaseDirectory + "//container_of_" + app + "_at_" + sdFormat.format(new Date()) + ".zip";
         try {
             HttpResponse<InputStream> response1 = Unirest.get(runOn.getURL() + "/api/v1/devices/" + getDeviceId() + "/app-container/" + app)
-                    .basicAuth(runOn.username, runOn.password)
+                    .basicAuth(runOn.getUsername(), runOn.getPassword())
                     .asBinary();
             FileUtils.copyInputStreamToFile(response1.getBody(), new File(path));
         }catch (Exception e){

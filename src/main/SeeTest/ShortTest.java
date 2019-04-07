@@ -10,8 +10,9 @@ public class ShortTest extends SeeTestBase {
 //        client.applicationClearData(app);
 //        getContainer(app);
 //        client.applicationClearData("Experitest.FingerPrintApp");
-//        client.launch("https://secure.sterbcwm-usa.com", false, true);
-        System.out.println(client.getVisualDump("WEB").contains("loginForm:usridTxt"));
+//        client.collectSupportData(projectBaseDirectory,"","B0076","","","");
+        client.launch("http://192.168.4.85:8060/html-tests/picker-tests/pickerTestHtml.html", false, true);
+        client.applicationClose("com.apple.mobilesafari");
 //        client.click("NATIVE","xpath=//*[@id='Start']",0,1);
 //        client.click("NATIVE", "xpath=//*[@id='Lap']", 0, 10);
 //        client.click("NATIVE","xpath=//*[@id='Stop']",0,1);

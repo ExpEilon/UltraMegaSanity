@@ -1,13 +1,12 @@
-import javax.swing.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class WriteSummary {
-    public static String root = System.getProperty("user.dir") +"//TestResult";
-    private static String directory = root + "//Summary.txt";
-    private static File summary = new File(directory);
+    private static String root;
+    private static File summary;
 
     public static synchronized void update(String sn, boolean pass){
             try {
@@ -21,11 +20,23 @@ public class WriteSummary {
                 br.close();
                 updatedList.add(deviceSummary.newLine());
                 String data = (String) updatedList.stream().collect(Collectors.joining("\n"));
-                MyThread.writeToSummary(System.getProperty("user.dir") + "//TestResult//Summary.txt", data, false);
+                MyThread.writeToFile(root+"//Summary.txt", data, false);
             } catch (java.io.IOException e) {
                 e.printStackTrace();
             }
     }
+
+    public static String getRoot(){
+        if(root == null || root.equals(""))
+            restartRoot();
+        return root;
+    }
+
+    public static void restartRoot(){
+        root = System.getProperty("user.dir") + "//TestResultAt_" + new SimpleDateFormat("yyyy_MM_dd HH_mm_ss").format(System.currentTimeMillis());
+    }
+
+    public static void createRoot(){new File(root).mkdir();}
 
     public static synchronized void writeToFile(File file,String data){
         PrintWriter writer = null;
@@ -42,6 +53,7 @@ public class WriteSummary {
     }
 
     public synchronized static void createSummary(List<String> list){
+        summary = new File(root + "//Summary.txt");
         final List lineToUpdate = new ArrayList();
         try {
             if(summary.exists()) {
@@ -54,7 +66,7 @@ public class WriteSummary {
         }
         List filteredList = list.stream().filter(j -> !lineToUpdate.contains(j)).collect(Collectors.toList());
         if(filteredList.size() > 0) {
-            list.stream().filter(j -> !lineToUpdate.contains(j)).forEach(i -> MyThread.writeToSummary(summary.getPath(),
+            list.stream().filter(j -> !lineToUpdate.contains(j)).forEach(i -> MyThread.writeToFile(summary.getPath(),
                     i + ",0,0,0", true));
         }
     }

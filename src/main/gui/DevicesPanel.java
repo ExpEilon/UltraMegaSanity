@@ -43,7 +43,7 @@ public class DevicesPanel extends JPanel implements ActionListener{
             devicePanel.setMaximumSize(new Dimension(1200, 20));
             devicePanel.setMinimumSize(new Dimension(1200, 20));
             JCheckBox temp = new JCheckBox(d.getProperty("SN"));
-            if(ConfigManager.devices.stream().anyMatch(d2 -> d2.getProperty("SN").equals(d.getProperty("SN"))))
+            if(ConfigManager.getDevices().stream().anyMatch(d2 -> d2.getProperty("SN").equals(d.getProperty("SN"))))
                 temp.setSelected(true);
             temp.addActionListener(this);
             jCheckBoxesDevices.add(temp);
@@ -65,7 +65,6 @@ public class DevicesPanel extends JPanel implements ActionListener{
             if(pressedBox.get().isSelected())
                 ConfigManager.addDevice(devices.stream().filter(d -> d.getProperty("SN").equals(pressedBox.get().getText())).findFirst().get());
             else ConfigManager.removeDevice(devices.stream().filter(d -> d.getProperty("SN").equals(pressedBox.get().getText())).findFirst().get());
-            System.out.println(ConfigManager.devices);
         }
 //        else if (e.getSource() == bChoose) {
 //            ConfigManager.addDevices(jCheckBoxesDevices.stream().filter(JCheckBox::isSelected).map(j -> j.getText()).collect(Collectors.toList()));

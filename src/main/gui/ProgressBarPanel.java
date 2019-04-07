@@ -1,40 +1,46 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.stream.Collectors;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ProgressBarPanel extends JPanel {
-    JProgressBar pbarPass;
-    JLabel ratio;
-    final int MINIMUM = 0;
+    JProgressBar pBarPass;
+    JLabel ratio,fails;
+    final int MINIMUM = 0,MAXIMUM = ConfigManager.tests.size()*ConfigManager.rounds;
 
-    public ProgressBarPanel(int max,String sn) {
+    private JRadioButton  jRadioButton ;
+
+    public ProgressBarPanel(String sn) {
         // initialize Progress Bar
-        ratio = new JLabel("0/0");
-        pbarPass = new JProgressBar();
-        pbarPass.setMinimum(MINIMUM);
-        pbarPass.setMaximum(max);
-        // add to JPanel
-        add(new JLabel(sn));
-        pbarPass.setForeground(Color.GREEN);
-        pbarPass.setValue(0);
-        add(pbarPass);
+        pBarPass = new JProgressBar();
+        pBarPass.setMinimum(MINIMUM);
+        pBarPass.setMaximum(MAXIMUM);
+        fails = new JLabel("0");
+        fails.setForeground(Color.RED);
+        ratio = new JLabel("0/" + MAXIMUM);
+        jRadioButton = new JRadioButton(sn);
+
+        jRadioButton.addActionListener((ActionEvent e) -> {
+                DeviceController deviceController = ConfigManager.getDevices().stream().filter(d -> d.getSN().equals(jRadioButton.getText())).findFirst().get();
+                ManagerOfGui.getInstance().getEndIsComingPanel().setNewBottom(deviceController);
+        });
+        add(jRadioButton);
+        pBarPass.setForeground(Color.GREEN);
+        pBarPass.setValue(0);
+        add(pBarPass);
         add(ratio);
+        add(fails);
     }
 
     public void updateBar(boolean pass) {
-        pbarPass.setValue(pbarPass.getValue()+1);
-        int total = Integer.parseInt(ratio.getText().split("/")[1]);
-        int passed = Integer.parseInt(ratio.getText().split("/")[0]);
-        if(pass) {
-            ratio.setText((passed + 1) + "/" + (total + 1));
+        pBarPass.setValue(pBarPass.getValue()+1);
+        int total = Integer.parseInt(ratio.getText().split("/")[0]);
+        ratio.setText((total + 1) + "/" + MAXIMUM);
+        if(!pass) {
+            int fail = Integer.parseInt(fails.getText());
+            fails.setText((++fail)+"");
         }
-        else{
-            pbarPass.setForeground(Color.RED);
-            ratio.setText(passed+"/"+(total+1));
-        }
-        validate();
-        repaint();
         SwingUtilities.getWindowAncestor(this).pack();
     }
-
+    public JRadioButton getJRadioButton(){return jRadioButton;}
 }

@@ -15,11 +15,10 @@ import java.util.*;
 public class Main {
     public static int interval = MyProperties.supportDataInterval*60*1000;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         MyProperties.lastReboot = System.currentTimeMillis();
         ConfigManager.initializeConn();
-        System.out.println(Arrays.asList(EriBankTest.class.getSuperclass().getTypeName()));
-        new File(System.getProperty("user.dir") + "//TestResult").mkdir();
+        ThreadPrintStream.replaceSystemOut();
         JFrame frame = new JFrame("Ultra Mega Automation Project");
         TheFatherPanel theFatherPanel = new TheFatherPanel();
         ManagerOfGui.getInstance().setTheFatherPanel(theFatherPanel);

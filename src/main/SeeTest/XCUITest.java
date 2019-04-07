@@ -10,14 +10,14 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 
 public class XCUITest {
-    String urlBase = "https://qacloud.experitest.com";
-    String user = "khaleda";
+    String urlBase = "http://192.168.2.22:9000";
+    String user = "admin";
     String password = "Experitest2012";
     HttpResponse<JsonNode> response;
     String url =  urlBase + "/api/v1/test-run/execute-test-run";
     //iOS data
-    String iOSPathToTestApp = System.getProperty("user.dir")+"\\tests\\PressTheDotUITests-Runner093.app.zip";//MBJ_UITests-Runner   PressTheDotUITests-Runner101    app_under_testUITests-Runner.app
-    String iOSPathToApp = System.getProperty("user.dir")+"\\apps\\PressTheDot093.ipa";//KChing     PressTheDot
+    String iOSPathToTestApp = System.getProperty("user.dir")+"\\tests\\PressTheDotUITests-Runner093.app.zip";//MBJ_UITests-Runner   PressTheDotUITests-Runner101    PressTheDotUITests-Runner093
+    String iOSPathToApp = System.getProperty("user.dir")+"\\apps\\PressTheDot093.ipa";//KChing     PressTheDot  PressTheDot093
     String iOSIgnoredPath = System.getProperty("user.dir") + "\\PressTheDotUITestsOnlyLong.xcscheme";
 
 //    String iOSPathToTestApp = "E:\\117917\\MBJ_UITests-Runner.app.zip";
@@ -33,7 +33,7 @@ public class XCUITest {
         long startTime = System.currentTimeMillis();
 //        while (true) {
             System.out.println(runTest("XCUITest",false, false, true,
-                    "@serialnumber='e51e57c7ab9ae0140116c606c8e3ad92aeb11a14'"));
+                    "@serialnumber='2ec34da9c45eedbeea2bfaf2253a3b567ce45699'"));
 //        }
 //        System.out.println("Time for 2: " + (System.currentTimeMillis() - startTime)/1000);
 //          @os='iOS'

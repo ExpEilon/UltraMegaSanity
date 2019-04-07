@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,10 +15,8 @@ import java.util.stream.Collectors;
 
 public class TheFatherPanel extends JPanel implements ActionListener {
     JLabel lRunOn;
-    JButton bStart,bAdd,bDelete;
+    JButton bAdd,bDelete,bShowDetails,bConfig;
 
-    //To do
-    JButton bShowDetails; //for clouds to edit, then open new panel with details and option to edit them.
     JComboBox runOnBox;
     DefaultComboBoxModel runOnDefBox;
 
@@ -29,40 +26,33 @@ public class TheFatherPanel extends JPanel implements ActionListener {
         lRunOn = new JLabel("What would you like to run on?");
         runOnDefBox = new DefaultComboBoxModel(ConfigManager.allConnections());
         runOnBox = new JComboBox(runOnDefBox);
-        bStart = new JButton("Next");
+
         bAdd = new JButton("Add");
         bDelete = new JButton("Delete");
         bShowDetails = new JButton("Show Details");
-        bStart.addActionListener(this);
+        bConfig = new JButton("Config");
         bAdd.addActionListener(this);
         bDelete.addActionListener(this);
         bShowDetails.addActionListener(this);
+        bConfig.addActionListener(this);
         JPanel topPanel = new JPanel(new GridLayout(1,0,5,5));
         topPanel.add(lRunOn);
         topPanel.add(runOnBox);
-//        add(bStart,BorderLayout.SOUTH);
         topPanel.add(bAdd);
         topPanel.add(bDelete);
         topPanel.add(bShowDetails);
+        topPanel.add(bConfig);
         runOnBox.addActionListener(this);
         add(topPanel,BorderLayout.NORTH);
         add(new RunPanel(), BorderLayout.CENTER);
         updateChosen(true);
-//        add(new TheChosenPanel(), BorderLayout.SOUTH);
     }
-//    private void repaintChosen(){
-//        JScrollPane scrollFrame = new JScrollPane(new TheChosenPanel());
-//        scrollFrame.setPreferredSize(new Dimension( 1200,300));
-////        setAutoscrolls(true);
-//        add(scrollFrame,BorderLayout.SOUTH);
-//
-//    }
+
     public void updateChosen(boolean first){
         if (((BorderLayout) getLayout()).getLayoutComponent(BorderLayout.SOUTH) != null)
             remove(((BorderLayout) getLayout()).getLayoutComponent(BorderLayout.SOUTH));
         JScrollPane scrollFrame = new JScrollPane(new TheChosenPanel());
         scrollFrame.setPreferredSize(new Dimension( 1200,300));
-//        setAutoscrolls(true);
         add(scrollFrame,BorderLayout.SOUTH);
         if(!first)
             SwingUtilities.getWindowAncestor(this).pack();
@@ -74,7 +64,7 @@ public class TheFatherPanel extends JPanel implements ActionListener {
         if (e.getSource() == bAdd) {
             if (((BorderLayout) getLayout()).getLayoutComponent(BorderLayout.CENTER) != null)
                 remove(((BorderLayout) getLayout()).getLayoutComponent(BorderLayout.CENTER));
-            add(new AddCloudFrame(),BorderLayout.CENTER);
+            add(new AddCloudFrame(null),BorderLayout.CENTER);
             SwingUtilities.getWindowAncestor(this).pack();
         }
         else if (e.getSource() == bDelete) {
@@ -82,10 +72,13 @@ public class TheFatherPanel extends JPanel implements ActionListener {
             runOnBox.removeItem(runOnBox.getSelectedItem().toString());
         }
         else if(e.getSource() == bShowDetails){
-            JOptionPane.showMessageDialog(null,
-                            "Coming soon....",
-                            "",
-                            JOptionPane.INFORMATION_MESSAGE);
+            if (((BorderLayout) getLayout()).getLayoutComponent(BorderLayout.CENTER) != null)
+                remove(((BorderLayout) getLayout()).getLayoutComponent(BorderLayout.CENTER));
+            add(new AddCloudFrame(ConfigManager.getRunOnFromJson(ConfigManager.getConn(runOnBox.getSelectedItem().toString()).toString())),BorderLayout.CENTER);
+            SwingUtilities.getWindowAncestor(this).pack();
+        }
+        else if(e.getSource() == bConfig){
+            new ConfigPanel();
         }
         else if (e.getSource() == runOnBox) {
             try {
@@ -109,15 +102,15 @@ public class TheFatherPanel extends JPanel implements ActionListener {
             }
         }
     }
-
+    public JComboBox getRunOnBox(){return runOnBox;}
     public void addConn(String name) {
         runOnBox.addItem(name);
     }
 
     private static List<DeviceController> getDevicesSN(ConfigManager.Connection runOn) {
-        String str = runOn.isGrid ? new GridClient(runOn.accesskey,runOn.getURL()).getDevicesInformation() :
-                (runOn.name.equals("ASE") ? getASEDevices(runOn): new MyClient(runOn.ip,runOn.port).getDevicesInformation());
-        if(str.equals("{Authorization=Bad username or password}"))
+        String str = runOn.isGrid ? new GridClient(runOn.getAccesskey(),runOn.getURL()).getDevicesInformation() :
+                (runOn.getName().equals("ASE") ? getASEDevices(runOn): new MyClient(runOn.getIp(),runOn.port).getDevicesInformation());
+        if(str.equals("{Authorization=Bad username or password}") || str.equals(""))
             return null;
         //filter is to remove first and last lines in the list
         return Arrays.asList(str.split("\n")).stream().filter(s ->
@@ -125,10 +118,6 @@ public class TheFatherPanel extends JPanel implements ActionListener {
                         && !(s.contains("emulator=\"true\"") && s.contains("status=\"unreserved Available\""))
                         && s.contains("os=\"ios\"")).map(s ->
                 new DeviceController(s,runOn)).collect(Collectors.toList());
-    }
-
-    private static String extractProperty(String line,String property){
-        return line.split(line+"\"")[0].split("\"")[0];
     }
 
     private static String getASEDevices(ConfigManager.Connection runOn){
@@ -140,5 +129,11 @@ public class TheFatherPanel extends JPanel implements ActionListener {
         } catch (MalformedURLException e) {
             return "{Authorization=Bad username or password}";
         }
+    }
+
+    public void theEndIsComing(){
+        removeAll();
+        add(ManagerOfGui.getInstance().getEndIsComingPanel());
+        SwingUtilities.getWindowAncestor(this).pack();
     }
 }

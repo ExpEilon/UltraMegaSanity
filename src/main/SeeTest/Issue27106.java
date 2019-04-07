@@ -18,7 +18,7 @@ public class Issue27106 {
     String user = "admin";
     String password = "Experitest2012";
     HttpResponse<JsonNode> response;
-    String serialNumber = "45a8ec778b1e6eb400e828cb989be9934fc03a8b";
+    String serialNumber = "2ec34da9c45eedbeea2bfaf2253a3b567ce45699";
     String appName = "com.experitest.UICatalog";
 
     @Test
@@ -44,8 +44,8 @@ public class Issue27106 {
 //UICatalogNoNeedToSignWithKeychain UICatalogNoNeedToSignWithEntitlements
     @Test
     public void basicInstrumentation() throws UnirestException{
-        int appId = uploadApp(false,false,false,false,"App2");
-//        System.out.println(installApp(appId,true));
+        int appId = uploadApp(false,false,false,false,"KChing");
+        System.out.println(installApp(appId,true));
 //        installedBasicInstrumented(appName);
 //        Assert.assertTrue(installedBasicInstrumented(appName) == instrumented);
 //        GridClient gridClient = new GridClient("eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVME5ERXdNVEUzTXpneE1nIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NTk0NjExNzQsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.jYD-urvjQ6cqlBL03EwyfYFWV4E8R2QMkCoqGJ1neA8", urlBase);
@@ -57,7 +57,7 @@ public class Issue27106 {
     private int uploadApp(boolean fromURL, boolean basicInstrumentation,boolean fixKeychain,boolean overrideEntitlements,String uniqueName) throws UnirestException {
         String url = urlBase + "/api/v1/applications/new" + (fromURL ? "-from-url":"");
 //        String pathToApp = System.getProperty("user.dir")+"\\apps\\UICatalog.ipa";
-        String pathToApp = "E:\\Downloads\\ObjCAppForOrtal.ipa";
+        String pathToApp = System.getProperty("user.dir")+"\\apps\\KChing.ipa";
         String pathToEntitlements = "E:\\issue-27106\\entitlementForUICatalog.txt";
         String appUrl = "http://192.168.2.170:8888/Eilon/UICatalog.ipa";
         File app = new File(pathToApp);
@@ -65,7 +65,7 @@ public class Issue27106 {
         response = Unirest.post(url)
                 .basicAuth(user, password)
                 .queryString(fromURL ? "url" : "dummy",appUrl)
-//                .queryString("camera", basicInstrumentation ? false:true)
+                .queryString("camera", basicInstrumentation ? false:true)
                 .queryString("touchId",basicInstrumentation ? false:true)
                 .queryString("project","default")
                 .queryString(uniqueName.equals("") ? "dummy" : "uniqueName",uniqueName)
@@ -133,7 +133,7 @@ public class Issue27106 {
 
     public void installedBasicInstrumented(String app){
         boolean assertion = true;
-        GridClient gridClient = new GridClient("eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVME5ERXdNVEUzTXpneE1nIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NTk0NjExNzQsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.jYD-urvjQ6cqlBL03EwyfYFWV4E8R2QMkCoqGJ1neA8", urlBase);
+        GridClient gridClient = new GridClient("eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVMU16WTVNakkyTmpVNU9BIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NjkwNTIyNjYsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.JlPI1RSBX5M4U9-DrOL5f53dk0O5_fJY-rsLWxidyYE", urlBase);
         Client client = gridClient.lockDeviceForExecution("TestFile", "@serialnumber = '" + serialNumber +"'", 30, 300000);
         try {
             client.launch(app, true, true);
