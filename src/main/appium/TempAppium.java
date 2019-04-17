@@ -35,16 +35,20 @@ public class TempAppium {
 //        dc.setCapability("reportDirectory", "reports");
 //        dc.setCapability("reportFormat", "xml");
 //        dc.setCapability("testName", "Untitled");
-        dc.setCapability("automationName" ,"XCUITest");
-        dc.setCapability("deviceQuery", "@serialnumber='8c5a391c5be2c4a140a9246486768736e062eb59'");
-        dc.setCapability("accessKey","eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVMU1USTRNREExTWpVek1RIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NjY2NDAwNTIsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.PrfO8A3rW0uBM2E925U_xECBhPrj1sPEfmIXT3229dM");
-        dc.setCapability(IOSMobileCapabilityType.BUNDLE_ID, "com.experitest.ExperiBank" ); // If you wish to continue with the app running on the device, comment this line
+//        dc.setCapability("automationName" ,"XCUITest");
+        dc.setCapability("deviceQuery", "@serialnumber='00008020-000844AC3408002E'");
+        dc.setCapability("accessKey","eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVMU5ERXlNREE1TlRJNU9RIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4Njk0ODAwOTUsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.8fOZNwz582zhuFbA08p_ysF94L4v9IzSzfTSYXuhGEk");
+//        dc.setCapability(IOSMobileCapabilityType.BUNDLE_ID, "com.experitest.ExperiBank" ); // If you wish to continue with the app running on the device, comment this line
         driver = new IOSDriver(new URL("http://192.168.2.22:9000/wd/hub"), dc);
 
     }
 
     @Test
     public void testUntitled() throws InterruptedException {
+        driver.get("https://www.wikipedia.org");
+//        driver.context("WEBVIEW_1");
+        System.out.println(driver.findElement(By.xpath("//*[contains(@text,'e')]")).getText()+"!");
+        System.out.println(driver.findElement(By.xpath("//*[contains(@text,'e')]")).getAttribute("text")+"!");
 //        driver.get("www.google.com");
 //        long start = System.currentTimeMillis();
 //        while((System.currentTimeMillis() - start) / 1000 < 600) {
@@ -56,9 +60,10 @@ public class TempAppium {
 //        driver.executeScript("seetest:client.setProperty(\"ios.auto.dismiss.alerts\",\"true\")");
 //        sleep(10000);
 //        driver.findElement(By.xpath("//*[@text='Tracking']")).click();
-        driver.executeScript("client:client.deviceAction(\"Unlock\")");
-        driver.executeScript("client:client.setDefaultTimeout(30000)");
-        driver.rotate(ScreenOrientation.PORTRAIT);
+//        driver.resetApp();
+//        driver.executeScript("client:client.deviceAction(\"Unlock\")");
+//        driver.executeScript("client:client.setDefaultTimeout(30000)");
+//        driver.rotate(ScreenOrientation.PORTRAIT);
     }
 
     @After

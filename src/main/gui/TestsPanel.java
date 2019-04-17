@@ -14,10 +14,11 @@ public class TestsPanel extends JFrame {
         SANITY, SHORT, SPECIAL
     }
     private static final Class[] TESTS_SANITY = {EriBankTest.class,SafariLongRun.class,JavaScriptTest.class,DeviceProperty.class,DeviceActions.class,RunNativeAPICallTest.class,PressTheDotTest.class,
-            CounterCommands.class,SetAuthTest.class,MonitorTest.class,SafariSameTab.class,SetLocationTest.class,EriBankAppium.class,
+            CounterCommands.class,SetAuthTest.class,MonitorTest.class,SafariSameTab.class, LocationTest.class,EriBankAppium.class,
             AppiumSafariTest.class,JSAppiumTest.class};
     private static final Class[] TESTS_SHORT ={ShortTestAppium.class,ShortTest.class};
-    private static final Class[] TESTS_SPECIAL ={PerformanceTest.class,ClearApplicationDataTest.class,ClearApplicationDataTestAp.class,ClearApplicationDataAutomation.class};
+    private static final Class[] TESTS_SPECIAL ={PerformanceTest.class,XCUITest.class,ClearApplicationDataTestAp.class,ClearApplicationDataAutomation.class,SafariMultipleTabs.class,
+            VOneSigningConf.class};
 
     static final HashMap<TYPE,Class[]> TESTS = new HashMap(){{
         put(TYPE.SANITY,TESTS_SANITY);

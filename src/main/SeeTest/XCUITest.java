@@ -4,15 +4,16 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import java.io.File;
 import java.util.List;
 import static java.lang.Thread.sleep;
 
-public class XCUITest {
-    String urlBase = "http://192.168.2.22:9000";
-    String user = "admin";
-    String password = "Experitest2012";
+public class XCUITest extends BaseTest{
+    String urlBase = runOn.getURL();
+    String user = runOn.getUsername();
+    String password = runOn.getPassword();
     HttpResponse<JsonNode> response;
     String url =  urlBase + "/api/v1/test-run/execute-test-run";
     //iOS data
@@ -33,7 +34,7 @@ public class XCUITest {
         long startTime = System.currentTimeMillis();
 //        while (true) {
             System.out.println(runTest("XCUITest",false, false, true,
-                    "@serialnumber='2ec34da9c45eedbeea2bfaf2253a3b567ce45699'"));
+                    ((MyThread)Thread.currentThread()).getQuery()));
 //        }
 //        System.out.println("Time for 2: " + (System.currentTimeMillis() - startTime)/1000);
 //          @os='iOS'
@@ -54,6 +55,7 @@ public class XCUITest {
 //        }
 //        System.out.println("Time for one device: " + (System.currentTimeMillis() - startTime)/1000);
     }
+    @Ignore
     @Test
     public void espresso() throws UnirestException, InterruptedException {
 //        while (true) {
@@ -86,6 +88,7 @@ public class XCUITest {
                 .asJson();
         System.out.println(response.getBody());
     }
+    @Ignore
     @Test
     public void cancel() throws UnirestException {
         HttpResponse<String> response = Unirest.post(urlBase + "/api/v1/test-run/" + 2051913 +"/cancel")
@@ -94,6 +97,7 @@ public class XCUITest {
 
         System.out.println(response.getBody());
     }
+    @Ignore
     @Test
     public void status() throws UnirestException {
         HttpResponse<JsonNode> response = Unirest.get(urlBase + "/api/v1/test-run/" + 3939 +"/status")

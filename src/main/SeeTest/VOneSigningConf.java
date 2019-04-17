@@ -6,21 +6,26 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Issue27106 {
-    String urlBase = "http://192.168.2.22:9000";
-    String user = "admin";
-    String password = "Experitest2012";
-    HttpResponse<JsonNode> response;
-    String serialNumber = "2ec34da9c45eedbeea2bfaf2253a3b567ce45699";
-    String appName = "com.experitest.UICatalog";
+public class VOneSigningConf extends BaseTest {
 
+    String urlBase = runOn.getURL();
+    String user = runOn.getUsername();
+    String password = runOn.getPassword();
+    HttpResponse<JsonNode> response;
+    String serialNumber = device.getSN();
+    String appName = "com.experitest.UICatalog";
+    String uniqueName;
+
+    @Ignore
     @Test
     public void getAllApplications() throws UnirestException {
         String url = urlBase + "/api/v1/applications";
@@ -30,6 +35,8 @@ public class Issue27106 {
                 .asJson();
         System.out.println(response.getBody());
     }
+
+    @Ignore
     @Test
     public void getApplication() throws UnirestException {
         int id = 70;
@@ -44,20 +51,43 @@ public class Issue27106 {
 //UICatalogNoNeedToSignWithKeychain UICatalogNoNeedToSignWithEntitlements
     @Test
     public void basicInstrumentation() throws UnirestException{
-        int appId = uploadApp(false,false,false,false,"KChing");
+        uniqueName = "UICatalogBasicInstrumentation";
+        deleteApp(uniqueName);
+        int appId = uploadApp(false,false,false,false,uniqueName);
         System.out.println(installApp(appId,true));
-//        installedBasicInstrumented(appName);
-//        Assert.assertTrue(installedBasicInstrumented(appName) == instrumented);
+        installedBasicInstrumented(appName);
 //        GridClient gridClient = new GridClient("eyJ4cC51IjoxLCJ4cC5wIjoyLCJ4cC5tIjoiTVRVME5ERXdNVEUzTXpneE1nIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE4NTk0NjExNzQsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.jYD-urvjQ6cqlBL03EwyfYFWV4E8R2QMkCoqGJ1neA8", urlBase);
 //        Client client = gridClient.lockDeviceForExecution("TestFile", "@serialnumber = '" + serialNumber +"'", 30, 300000);
 //        client.install("cloud:uniqueName=UICatalogNoNeedToSignWithKeychain",false,false);
 //        client.releaseClient();
     }
 
+    private void deleteApp(String name){
+        String url = urlBase + "/api/v1/applications";
+        try {
+            response = Unirest.get(url)
+                    .basicAuth(user, password)
+                    .queryString("uniqueName",name)
+                    .asJson();
+            if(response.getBody().getArray().length() > 0){
+                //get app id
+                int id = response.getBody().getArray().getJSONObject(0).getInt("id");
+                url = urlBase +"/" + id + "/delete";
+                response = Unirest.post(url)
+                        .basicAuth(user, password)
+                        .asJson();
+                System.out.println(response);
+            }
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private int uploadApp(boolean fromURL, boolean basicInstrumentation,boolean fixKeychain,boolean overrideEntitlements,String uniqueName) throws UnirestException {
         String url = urlBase + "/api/v1/applications/new" + (fromURL ? "-from-url":"");
-//        String pathToApp = System.getProperty("user.dir")+"\\apps\\UICatalog.ipa";
-        String pathToApp = System.getProperty("user.dir")+"\\apps\\KChing.ipa";
+        String pathToApp = System.getProperty("user.dir")+"\\apps\\UICatalog.ipa";
+//        String pathToApp = System.getProperty("user.dir")+"\\apps\\KChing.ipa";
         String pathToEntitlements = "E:\\issue-27106\\entitlementForUICatalog.txt";
         String appUrl = "http://192.168.2.170:8888/Eilon/UICatalog.ipa";
         File app = new File(pathToApp);
@@ -77,6 +107,7 @@ public class Issue27106 {
         return response.getBody().getObject().getJSONObject("data").getInt("id");
     }
 
+    @Ignore
     @Test
     public void newApplication() throws UnirestException {
         String url = urlBase + "/api/v1/applications/new";
@@ -98,6 +129,7 @@ public class Issue27106 {
 //        Assert.assertTrue(installedInstrumented(appName) == instrumented);
     }
 
+    @Ignore
     @Test
     public void newApplicationURL() throws UnirestException {
         String url = urlBase + "/api/v1/applications/new-from-url";
@@ -111,20 +143,20 @@ public class Issue27106 {
         System.out.println(response.getBody());
     }
 
-    public int getDeviceId(String sn) throws UnirestException {
-        HttpResponse<JsonNode> response1 = Unirest.get(urlBase+"/api/v1/devices")
-                .basicAuth(user, password)
-                .asJson();
-        JSONArray jsonArray = response1.getBody().getObject().getJSONArray("data");
-        return IntStream.range(0,jsonArray.length()).mapToObj(i->jsonArray.getJSONObject(i)).collect(Collectors.toList()).stream()
-                .filter(j -> j.getString("udid").equals(sn)).findFirst().map(j -> j.getInt("id")).get();
-    }
+//    public int getDeviceId(String sn) throws UnirestException {
+//        HttpResponse<JsonNode> response1 = Unirest.get(urlBase+"/api/v1/devices")
+//                .basicAuth(user, password)
+//                .asJson();
+//        JSONArray jsonArray = response1.getBody().getObject().getJSONArray("data");
+//        return IntStream.range(0,jsonArray.length()).mapToObj(i->jsonArray.getJSONObject(i)).collect(Collectors.toList()).stream()
+//                .filter(j -> j.getString("udid").equals(sn)).findFirst().map(j -> j.getInt("id")).get();
+//    }
 
     public JsonNode installApp(int appId,boolean instrumented) throws UnirestException {
         String urlInstall = urlBase + "/api/v1/applications/"+ appId +"/install";
         response = Unirest.post(urlInstall)
                 .basicAuth(user, password)
-                .queryString("deviceId", getDeviceId(serialNumber))
+                .queryString("deviceId", getDeviceId())
                 .queryString("instrument", instrumented)
                 .asJson();
         return response.getBody();

@@ -17,7 +17,9 @@ public class EriBankAppium extends AppiumBase {
 
         if(driver.isAppInstalled("com.experitest.ExperiBank"))
             driver.executeScript("seetest:client.uninstall(\"com.experitest.ExperiBank\")");
-        driver.installApp(isGrid? "cloud:com.experitest.ExperiBank":"com.experitest.ExperiBank");
+        if(ConfigManager.checkIfSetTrue("installFromPath"))
+            driver.installApp(System.getProperty("user.dir")+ "\\apps\\EriBank.ipa");
+        else driver.installApp(isGrid? "cloud:com.experitest.ExperiBank":"com.experitest.ExperiBank");
         driver.executeScript("seetest:client.launch(\"com.experitest.ExperiBank\",\""+MyProperties.instrumented+"\",\"true\")");
 //        if(isSimulator) Thread.sleep(10000);
         driver.findElement(By.xpath("//*[@placeholder='Username']")).sendKeys("company");

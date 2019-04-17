@@ -41,9 +41,11 @@ public class RunSummary {
         }
         return this;
     }
+
     public int total(){
         return success+failure;
     }
+
     @Override
     public String toString(){
         return "******************************************************\n"+

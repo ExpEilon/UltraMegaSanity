@@ -12,13 +12,12 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Main {
+public class AutomationProject {
     public static int interval = MyProperties.supportDataInterval*60*1000;
 
     public static void main(String[] args) {
         MyProperties.lastReboot = System.currentTimeMillis();
         ConfigManager.initializeConn();
-        ThreadPrintStream.replaceSystemOut();
         JFrame frame = new JFrame("Ultra Mega Automation Project");
         TheFatherPanel theFatherPanel = new TheFatherPanel();
         ManagerOfGui.getInstance().setTheFatherPanel(theFatherPanel);

@@ -40,7 +40,7 @@ public class SetAuthTest extends SeeTestBase {
         client.setProperty("ios.waiting.element.polling.interval","75");//Added after clicking was to fast (performance improvement)
         app = "com.experitest.UICatalog";
 //        if(!installedInstrumented(app))
-            client.install(System.getProperty("user.dir")+"\\apps\\UICatalog.ipa",true,false);
+        client.install(System.getProperty("user.dir")+"\\apps\\UICatalog.ipa",true,false);
         if(createContainer)
             client.launch(app, launchOptionsMap);
         else

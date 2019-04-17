@@ -25,7 +25,7 @@ public class ProgressBarPanel extends JPanel {
                 ManagerOfGui.getInstance().getEndIsComingPanel().setNewBottom(deviceController);
         });
         add(jRadioButton);
-        pBarPass.setForeground(Color.GREEN);
+        pBarPass.setForeground(Color.BLUE);
         pBarPass.setValue(0);
         add(pBarPass);
         add(ratio);

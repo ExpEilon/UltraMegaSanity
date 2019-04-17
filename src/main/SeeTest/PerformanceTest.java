@@ -42,20 +42,24 @@ public class PerformanceTest extends SeeTestBase {
     Map<String,ArrayList<Integer>> results;
     @Test
     public void webPerformance(){
-        initilize();
+        initialize();
         meanExpected.keySet().stream().forEach(k -> results.put(k,new ArrayList<>()));
-        IntStream.range(0,ROUNDS).forEach(i -> meanExpected.keySet().stream().forEach(k -> results.get(k).add((int)getCommandTime(k)))); //runs one round);
+        IntStream.range(0,ROUNDS).forEach(i -> {
+            meanExpected.keySet().stream().forEach(k ->results.get(k).add((int)getCommandTime(k)));
+            if(((i+1)%10)==0)
+                System.out.println(calaulateMeanAndDeviation(i));
+        });
         //Calculates mean
-        results.keySet().stream().forEach(k -> mean.put(k,results.get(k).stream().mapToInt(a->a).sum()/ROUNDS));
-        //Calculates deviation
-        results.keySet().stream().forEach(k -> deviation.put(k, (int) Math.sqrt( 
-                results.get(k).stream().mapToInt(a->
-                (int) Math.pow(a-mean.get(k),2)).sum()/ROUNDS)));
+//        results.keySet().stream().forEach(k -> mean.put(k,results.get(k).stream().mapToInt(a->a).sum()/ROUNDS));
+//        //Calculates deviation
+//        results.keySet().stream().forEach(k -> deviation.put(k, (int) Math.sqrt(
+//                results.get(k).stream().mapToInt(a->
+//                (int) Math.pow(a-mean.get(k),2)).sum()/ROUNDS)));
 
-        WriteSummary.writeToFile(new File(WriteSummary.getRoot()+"//Performance.txt"),MyThread.currentThread().getName() + "\nMean: " + mean.toString()  +"\nDeviation: " + deviation.toString());
+        WriteSummary.writeToFile(new File(WriteSummary.getRoot()+"//Performance.txt"),MyThread.currentThread().getName() + calaulateMeanAndDeviation(ROUNDS));
     }
 
-    private void initilize(){
+    private void initialize(){
         mean = new HashMap<>();
         deviation= new HashMap<>();
         results = new HashMap<>();
@@ -98,7 +102,16 @@ public class PerformanceTest extends SeeTestBase {
         Assert.fail("Couldn't perform " + command + " command for " + TRIES + "times in a row.\n");
         return 0;
     }
+    private String calaulateMeanAndDeviation(int rounds){
+        //Calculates mean
+        results.keySet().stream().forEach(k -> mean.put(k,results.get(k).stream().mapToInt(a->a).sum()/rounds));
+        //Calculates deviation
+        results.keySet().stream().forEach(k -> deviation.put(k, (int) Math.sqrt(
+                results.get(k).stream().mapToInt(a->
+                        (int) Math.pow(a-mean.get(k),2)).sum()/rounds)));
 
+        return "\nMean: " + mean.toString()  +"\nDeviation: " + deviation.toString();
+    }
     private void lockDevice(){
         if(isGrid) {
             gridClient = new GridClient(runOn.getAccesskey(), runOn.getURL());

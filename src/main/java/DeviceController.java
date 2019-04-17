@@ -8,12 +8,12 @@ public class DeviceController {
     private boolean isLocal;
     private ProgressBarPanel progressBarPanel;
     private String directory;
-
+    private String deviceLogDirectory;
 
     public DeviceController(String line,ConfigManager.Connection runOn){
 
         this.line = line;
-        isLocal = line.contains("remote=\"false\"");
+        isLocal = !runOn.isGrid;
         properties = new HashMap<>();
         properties.put("SN",extractProperty("serialnumber"));
         properties.put("OS",extractProperty("os"));
@@ -43,6 +43,8 @@ public class DeviceController {
         return line.split(property+"=\"")[1].split("\"")[0];
     }
 
+    public ConfigManager.Connection getRunOn(){return runOn;}
+
     public String getDirectory(){return directory;}
 
     public String getClientLog(){return directory + "//Client.log";}
@@ -51,5 +53,9 @@ public class DeviceController {
 
     public String getSummaryDirectory(){return directory + "//Summary.txt";}
 
+    public String getDeviceLogDirectory(){return deviceLogDirectory;}
+
     public void restart(){this.progressBarPanel = new ProgressBarPanel(getSN());}
+
+    public void setDeviceLogDirectory(String deviceLogDirectory) {this.deviceLogDirectory = deviceLogDirectory;}
 }

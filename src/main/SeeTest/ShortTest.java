@@ -3,16 +3,23 @@ import org.junit.Test;
 public class ShortTest extends SeeTestBase {
 
     String appName = "com.apple.Preferences";
-    String app = "com.experitest.UICatalog";
+    String pathToApp = System.getProperty("user.dir")+ "\\apps\\" + (isSimulator ? "ExperiBankSimulator.app.zip" :"EriBank.ipa");
+    String app = "com.experitest.ExperiBank";
     @Test
     public void shortTest() {
 //        client.install("cloud:uniqueName=chasepaypos_ios_q5_12202018",false,false);
 //        client.applicationClearData(app);
+//        client.install(pathToApp,true,false);
+        client.launch(app, true, true);
+        client.click("NATIVE","xpath=//*[@accessibilityIdentifier='usernameTextField']",0,1);
+        client.sendText("ml \n");
+        client.launch("com.apple.Preferences",false,true);
+//        client.elementSendText("NATIVE", MyProperties.instrumented ? "xpath=//*[@accessibilityIdentifier='usernameTextField']" : "xpath=//*[@placeholder='Username']", 0, "HOQAI rule! \\n");
 //        getContainer(app);
 //        client.applicationClearData("Experitest.FingerPrintApp");
 //        client.collectSupportData(projectBaseDirectory,"","B0076","","","");
-        client.launch("http://192.168.4.85:8060/html-tests/picker-tests/pickerTestHtml.html", false, true);
-        client.applicationClose("com.apple.mobilesafari");
+//        client.launch("http://192.168.4.85:8060/html-tests/picker-tests/pickerTestHtml.html", false, true);
+//        client.applicationClose("com.apple.mobilesafari");
 //        client.click("NATIVE","xpath=//*[@id='Start']",0,1);
 //        client.click("NATIVE", "xpath=//*[@id='Lap']", 0, 10);
 //        client.click("NATIVE","xpath=//*[@id='Stop']",0,1);

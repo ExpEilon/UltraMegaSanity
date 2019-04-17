@@ -61,6 +61,7 @@ public class RunPanel extends JPanel implements ActionListener {
             if(!validRounds())
                 return;
             removeAll();
+            ThreadPrintStream.replaceSystemOut();
             WriteSummary.createRoot();
             WriteSummary.createSummary(ConfigManager.devicesToStringArray());
             ManagerOfGui.letsStart(false);

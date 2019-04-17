@@ -18,7 +18,7 @@ public abstract class SeeTestBase extends BaseTest{
     protected GridClient gridClient = null;
     Map<String, Object> launchOptionsMap;
     boolean createContainer = MyProperties.createContainer && runOn.isGrid;
-    String app;
+    String app,pathToApp;
 
     @Before
     public void setUp() {
@@ -44,20 +44,22 @@ public abstract class SeeTestBase extends BaseTest{
             }
             if (ConfigManager.checkIfSetTrue("extenedClientLog"))
                 client.setLogger(Utils.initDefaultLogger(Level.ALL));
-            if (ConfigManager.checkIfSetTrue("deviceLog"))
-                client.startLoggingDevice(projectBaseDirectory + "//deviceLog//deviceLog_" + this.getClass().getName() + "_" + sdFormat.format(new Date()) + ".log");
+            if (ConfigManager.checkIfSetTrue("deviceLog")) {
+                String deviceLogDirectory = projectBaseDirectory + "//deviceLog//deviceLog_" + this.getClass().getName() + "_" + sdFormat.format(new Date()) + ".log";
+                ((MyThread)Thread.currentThread()).getDevice().setDeviceLogDirectory(deviceLogDirectory);
+                client.startLoggingDevice(deviceLogDirectory);
+            }
             if (ConfigManager.checkIfSetTrue("makeReporter"))
                 client.setReporter("xml", projectBaseDirectory + "//Reporter", this.getClass().getName());
             if (ConfigManager.checkIfSetTrue("videoRecording"))
                 client.startVideoRecord();
-//            client.setProperty("ios.debug.webinspector.connection","true");
+//            client.setProperty("ios.webinspector.java.impl","true");
         }
     }
 
     @After
     public void tearDown() throws Exception {
         if (!(this instanceof PerformanceTest)) {
-//        client.stopLoggingDevice();
 //        String NEW_APP_URL = "/applications/new";
 //        String webPage = MyProperties.runOn.getURL() + "/api/v1";
 //        File f = new File("C:\\Users\\eilon.grodsky\\IdeaProjects\\UltraMegaSanity\\apps\\EriBank.ipa");

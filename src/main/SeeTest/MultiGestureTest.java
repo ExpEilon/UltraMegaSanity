@@ -8,7 +8,7 @@ import org.junit.Test;
 public class MultiGestureTest extends SeeTestBase {
 
     @Test
-    public void testMultiGestureTest() throws Exception {
+    public void testMultiGestureTest(){
         /*******************************
          *
          *
@@ -16,6 +16,7 @@ public class MultiGestureTest extends SeeTestBase {
          *
          *
          ********************************/
+        client.startVideoRecord();
         int waitTime = 1000;
         String deviceInfo = client.getDevicesInformation();
         String deviceScreenSize = deviceInfo.split("screensize=\"")[1].split("\"")[0];
@@ -41,5 +42,6 @@ public class MultiGestureTest extends SeeTestBase {
         client.multiTouchUp(2);
         client.performMultiGesture();
         client.stopStepsGroup();
+        client.stopVideoRecord();
     }
 }

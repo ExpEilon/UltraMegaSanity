@@ -95,6 +95,7 @@ public class TheFatherPanel extends JPanel implements ActionListener {
                 add(new RunPanel(devices), BorderLayout.CENTER);
                 SwingUtilities.getWindowAncestor(this).pack();
             } catch (Exception ex) {
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(null,
                         "There might be some connection problems.\nPlease check if the server/port is available",
                         "Connection Error",

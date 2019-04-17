@@ -63,7 +63,7 @@ public class MyThread extends Thread {
         Result result = junit.run(test);
         exc = test.getName() +" Test " + (result.wasSuccessful() ?  "Passed" + ", The test took " + duration :
                 "failed:\n" + result.getFailures().stream().map(e -> e.getException().getMessage()+e.getTrace()).collect(Collectors.joining("\n")));
-        if(ConfigManager.checkIfSetTrue("saveClientLogToFile"))
+//        if(ConfigManager.checkIfSetTrue("saveClientLogToFile"))
             out.append(result.getFailures().stream().map(e ->e.getTrace()).collect(Collectors.joining("\n")));
         summary.put(test, summary.get(test).update(duration, sdFormat.format(now), result));
         writeToFile(device.getAllResultDirectory(), sdFormat.format(now) + "    " + exc, true);

@@ -70,6 +70,7 @@ public class WriteSummary {
                     i + ",0,0,0", true));
         }
     }
+
     public static File getRootDirectory(){
         return new File(root);
     }

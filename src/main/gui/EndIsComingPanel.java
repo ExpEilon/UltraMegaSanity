@@ -8,10 +8,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
 public class EndIsComingPanel extends JPanel implements ActionListener {
 
@@ -127,16 +123,7 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
             e.printStackTrace();
         }
     }
-//    private String stringFromFile(String path){
-//        java.util.List<String> lines = null;
-//        try {
-//            lines = Files.readAllLines(Paths.get(path), Charset.defaultCharset());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }finally {
-//            return lines.stream().collect(Collectors.joining("\n"));
-//        }
-//    }
+
     private class BottomPanel extends JPanel implements ActionListener{
         JRadioButton bAllResults,bSummary,bClient;
         ButtonGroup logsBG;
@@ -154,10 +141,13 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
             bSummary.addActionListener(this);
             bClient = new JRadioButton("Client Log");
             bClient.addActionListener(this);
+//            bDeviceLog = new JRadioButton("Device Log");
+//            bDeviceLog.addActionListener(this);
             logsBG = new ButtonGroup();
             logsBG.add(bClient);
             logsBG.add(bAllResults);
             logsBG.add(bSummary);
+//            logsBG.add(bDeviceLog);
             logPanel = new JPanel(new BorderLayout());
             clientText = new JTextArea();
             logPanel.add(clientText,BorderLayout.CENTER);
@@ -166,6 +156,8 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
             radioPanel.add(bAllResults);
             if(ConfigManager.rounds > 1)
                 radioPanel.add(bSummary);
+//            if(ConfigManager.checkIfSetTrue("deviceLog"))
+//                radioPanel.add(bDeviceLog);
             scrollFrame = new JScrollPane(logPanel);
             scrollFrame.setPreferredSize(new Dimension( ConfigManager.WIDTH,ConfigManager.HEIGHT*3/2));
             setAutoscrolls(true);
@@ -186,6 +178,10 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
             else if(e.getSource() == bAllResults){
                 writeLogs(device.getAllResultDirectory());
             }
+//            else if(e.getSource() == bDeviceLog){
+//                writeLogs(device.getDeviceLogDirectory());
+//            }
+
         }
 
         public void writeLogs(String fromFile){

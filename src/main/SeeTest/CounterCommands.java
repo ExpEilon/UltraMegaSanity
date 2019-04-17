@@ -7,14 +7,15 @@ public class CounterCommands extends SeeTestBase {
 
     @Test
     public void getInstrumented() throws Exception {
-        client.install((isGrid ? "cloud:":"")+instrumentedApp ,true,false);
+        install();
         counter("cpu",instrumentedApp);
         counter("memory",instrumentedApp);
-        counter("battery",instrumentedApp); // wait till SA-25366 solved for non-instrumented
+        counter("battery",instrumentedApp);
     }
 
     @Test
     public void getNonInstrumented() throws Exception {
+        install();
         counter("cpu",nonInstrumentedApp);
         counter("memory",nonInstrumentedApp);
 //        counter("battery",nonInstrumentedApp); // wait till SA-25366 solved for non-instrumented
@@ -27,5 +28,10 @@ public class CounterCommands extends SeeTestBase {
         if (res<=0) {
             throw new Exception("Counter of " + counter +" didn't work");
         }
+    }
+    public void install(){
+        if(ConfigManager.checkIfSetTrue("installFromPath"))
+            client.install(System.getProperty("user.dir")+ "\\apps\\EriBank.ipa",false,false);
+        else client.install((isGrid ? "cloud:":"")+instrumentedApp ,true,false);
     }
 }
