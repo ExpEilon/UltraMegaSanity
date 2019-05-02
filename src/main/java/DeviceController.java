@@ -19,7 +19,7 @@ public class DeviceController {
         properties.put("OS",extractProperty("os"));
         properties.put("Version",extractProperty("version"));
         properties.put("Model",extractProperty("model"));
-        properties.put("IsSimulator", isLocal ? "Temp" : extractProperty("emulator"));//
+        properties.put("IsSimulator", line.contains("emulator=\"true\"") ? "true" : "false");//
         properties.put("DHM",isLocal ? "Local" : extractProperty("dhmname"));//
         properties.put("Status",isLocal ? "Local" : extractProperty("status"));//
         properties.put("Reservedtoyou",isLocal ? "Local" : extractProperty("reservedtoyou"));//
@@ -34,8 +34,6 @@ public class DeviceController {
     }
 
     public String getSN(){return getProperty("SN");}
-
-    public ConfigManager.Connection getConn(){return runOn;}
 
     public ProgressBarPanel getProgressBarPanel(){return progressBarPanel;}
 

@@ -109,7 +109,7 @@ public class TheFatherPanel extends JPanel implements ActionListener {
     }
 
     private static List<DeviceController> getDevicesSN(ConfigManager.Connection runOn) {
-        String str = runOn.isGrid ? new GridClient(runOn.getAccesskey(),runOn.getURL()).getDevicesInformation() :
+            String str = runOn.isGrid ? new GridClient(runOn.getAccesskey(),runOn.getURL()).getDevicesInformation() :
                 (runOn.getName().equals("ASE") ? getASEDevices(runOn): new MyClient(runOn.getIp(),runOn.port).getDevicesInformation());
         if(str.equals("{Authorization=Bad username or password}") || str.equals(""))
             return null;
@@ -117,7 +117,8 @@ public class TheFatherPanel extends JPanel implements ActionListener {
         return Arrays.asList(str.split("\n")).stream().filter(s ->
                 s.contains("serialnumber")
                         && !(s.contains("emulator=\"true\"") && s.contains("status=\"unreserved Available\""))
-                        && s.contains("os=\"ios\"")).map(s ->
+                        && s.contains("os=\"ios\"")
+                        && (s.contains("reservedtoyou=\"true\"") || s.contains("remote=\"false\"") ) ).map(s ->
                 new DeviceController(s,runOn)).collect(Collectors.toList());
     }
 
