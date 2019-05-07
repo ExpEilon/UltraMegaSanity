@@ -26,9 +26,8 @@ public class RunPanel extends JPanel implements ActionListener {
         add(scrollFrame,BorderLayout.CENTER);
     }
 
-    public RunPanel(List<DeviceController> l){
+    public RunPanel(List<DeviceController> listDevices){
         removeAll();
-        listDevices = l;
         testsButtons = new HashMap<>();
         Arrays.asList(TestsPanel.TYPE.values()).stream().forEach(t -> testsButtons.put(t,new JButton(t.name())));
         setLayout(new BorderLayout());

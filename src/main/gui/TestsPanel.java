@@ -18,7 +18,7 @@ public class TestsPanel extends JFrame {
             AppiumSafariTest.class,JSAppiumTest.class};
     private static final Class[] TESTS_SHORT ={ShortTestAppium.class,ShortTest.class};
     private static final Class[] TESTS_SPECIAL ={PerformanceTest.class,XCUITest.class,ClearApplicationDataTestAp.class,ClearApplicationDataAutomation.class,SafariMultipleTabs.class,
-            VOneSigningConf.class};
+            SigningConf.class,GeoLocationAppium.class,IFramesTest.class};
 
     static final HashMap<TYPE,Class[]> TESTS = new HashMap(){{
         put(TYPE.SANITY,TESTS_SANITY);

@@ -104,6 +104,7 @@ public class TheFatherPanel extends JPanel implements ActionListener {
         }
     }
     public JComboBox getRunOnBox(){return runOnBox;}
+
     public void addConn(String name) {
         runOnBox.addItem(name);
     }
@@ -118,7 +119,7 @@ public class TheFatherPanel extends JPanel implements ActionListener {
                 s.contains("serialnumber")
                         && !(s.contains("emulator=\"true\"") && s.contains("status=\"unreserved Available\""))
                         && s.contains("os=\"ios\"")
-                        && (s.contains("reservedtoyou=\"true\"") || s.contains("remote=\"false\"") ) ).map(s ->
+                        && (runOn.isGrid ? s.contains("status=\"unreserved online\"") : s.contains("reservedtoyou=\"true\"") || s.contains("remote=\"false\"")) ).map(s ->
                 new DeviceController(s,runOn)).collect(Collectors.toList());
     }
 
