@@ -3,13 +3,48 @@ import org.junit.Test;
 
 public class SafariMultipleTabs extends SeeTestBase{
 
+
+    @Test
+    public void MultipleDifferentTabs(){
+        try {
+            final int numOfTabs = 3;
+            String[] URL =
+                    { "safari:http://192.168.4.85:8060/html-tests/RegressionHibridApplication/HibridApplicationHtml.html"
+                            , "safari:http://192.168.4.85:8060/html-tests/ScrollingRegression/Scrolling.html"
+                            , "safari:http://www.google.co.il" };
+
+            closeSafariTabs();
+
+            client.launch(URL[0].split("afari:")[1],false,true);
+
+            for (int i = 1; i < numOfTabs; i++) {
+
+                launchAnotherTab(URL[i].split("afari:")[1]);
+
+                runScenario(URL[i]);
+
+            }
+
+            goToAnotherTab("xpath=//*[contains(text(),'html-tests/RegressionHibridApplication/HibridApplicationHtml.html') and not(contains(text(),'Close'))]");
+            runScenario(URL[0]);
+            closeSafariTabs();
+        }catch (Exception e){
+            closeSafariTabs();
+            throw e;
+        }finally {
+            if(client.isElementFound("NATIVE", "xpath=//*[@value='Done']", 0)){
+                client.click("NATIVE", "xpath=//*[@value='Done']", 0, 1);
+            }
+        }
+    }
+
+
     @Test
     public void MultipleTabsWithSameURL(){
         try{
             final int numOfTabs = 2;
             String safariPrefix = "safari:";
-            String urlRegualarTestingPage = "http://192.168.4.85:8060/html-tests/"
-                    + "RegressionHibridApplication/HibridApplicationHtml.html";
+            String urlRegualarTestingPage = "http://192.168.4.85:8060/html-tests/RegressionHibridApplication/HibridApplicationHtml.html";
 
             String urlScrolingTestingPage = "http://192.168.4.85:8060/"
                     + "html-tests/ScrollingRegression/Scrolling.html";
@@ -22,14 +57,11 @@ public class SafariMultipleTabs extends SeeTestBase{
 
             for (int i = 0; i < numOfTabs; i++) {
 
-                double startTime = System.currentTimeMillis();
-
                 launchAnotherTab(urlRegualarTestingPage);
                 runScenario(safariPrefix + urlRegualarTestingPage  );
                 client.elementSendText("web", "id=firstName", 0, String.valueOf(i));
                 String num = client.elementGetProperty("web", "id=firstName", 0, "text");
                 Assert.assertEquals(i, Integer.parseInt(num));
-//                log.info("--- Total: #" + (i+1) + " Tab Run Time: " +	(System.currentTimeMillis()-startTime)/1000 + " Seconds ---\n");
             }
             closeSafariTabs();
         }catch (Exception e){
@@ -100,6 +132,19 @@ public class SafariMultipleTabs extends SeeTestBase{
         client.syncElements(1000,5000);
         client.elementSendText("NATIVE", "xpath=//*[@accessibilityLabel='URL']", 0, URL);
         client.click("NATIVE", "xpath=//*[@accessibilityLabel='Go']", 0,1);
+    }
+    private void goToAnotherTab(String xpath) {
+        if(client.waitForElement("NATIVE", "xpath=//*[@text='Pages' or @text='Tabs']", 0, 10000)) {
+            client.click("NATIVE", "xpath=//*[@text='Pages' or @text='Tabs']", 0, 1);
+        }
+        if(client.waitForElement("NATIVE", xpath, 0, 10000)){
+            int width = Integer.parseInt(client.elementGetProperty("NATIVE", xpath, 0, "width"));
+            int height = Integer.parseInt(client.elementGetProperty("NATIVE", xpath, 0, "height"));
+            int x = Integer.parseInt(client.elementGetProperty("NATIVE", xpath, 0, "x"));
+            int y = Integer.parseInt(client.elementGetProperty("NATIVE", xpath, 0, "y"));
+            client.clickCoordinate(Math.round(x + width / 2), Math.round(y + height / 8), 1);
+        }
+        client.sleep(2000);
     }
 
 }

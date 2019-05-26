@@ -18,7 +18,7 @@ public class AutomationProject {
     public static void main(String[] args) {
         MyProperties.lastReboot = System.currentTimeMillis();
         ConfigManager.initializeConn();
-        JFrame frame = new JFrame("Ultra Mega Automation Project");
+        JFrame frame = new JFrame("Kind of ok... Automation Project that could be better");
         TheFatherPanel theFatherPanel = new TheFatherPanel();
         ManagerOfGui.getInstance().setTheFatherPanel(theFatherPanel);
         frame.setContentPane(theFatherPanel);

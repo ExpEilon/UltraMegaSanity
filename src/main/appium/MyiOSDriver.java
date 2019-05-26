@@ -3,16 +3,28 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.html5.Location;
+import org.openqa.selenium.html5.LocationContext;
 
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MyiOSDriver extends IOSDriver{
+public class MyiOSDriver extends IOSDriver implements LocationContext {
 
     public MyiOSDriver(URL remoteAddress, Capabilities desiredCapabilities) {
         super(remoteAddress, desiredCapabilities);
     }
+
+    @Override
+    public Location location(){
+        long startTime = System.currentTimeMillis();
+        Location location = super.location();
+        long endTime = System.currentTimeMillis();
+        ((MyThread)Thread.currentThread()).commandsSum.addData("location",endTime-startTime);
+        return location;
+    }
+
     @Override
     public void installApp(String appPath){
         long startTime = System.currentTimeMillis();
@@ -62,6 +74,15 @@ public class MyiOSDriver extends IOSDriver{
         } catch (NoSuchElementException e) {
             return false;
         }
+    }
+
+    public boolean waitForElement(By by,int timeout){
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() < startTime + timeout){
+            if(isElementFound(by))
+                return true;
+        }
+        return false;
     }
 
 }

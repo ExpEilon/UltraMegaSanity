@@ -8,18 +8,18 @@ public class EriBankTest extends SeeTestBase {
     @Test
     public void EriTest() throws Exception {
         app = "com.experitest.ExperiBank";
-        pathToApp = System.getProperty("user.dir")+ "\\apps\\" + (isSimulator ? "ExperiBankSimulator.app.zip" :"EriBank.ipa");
+        pathToApp = isSimulator ? PathsMap.EriBankSimulator : PathsMap.EriBank;
         bundleToPath.put(app,pathToApp);
         if(client.getInstalledApplications().contains(app))
             client.uninstall(app);
         if(ConfigManager.checkIfSetTrue("installFromPath"))
-            client.install(System.getProperty("user.dir")+ "\\apps\\" + (isSimulator ? "ExperiBankSimulator.app.zip" :"EriBank.ipa"),false,false);
+            client.install(pathToApp ,false,false);
         else {
             if(isGrid)
                 uploadIfMissing(app);
             client.install(isGrid ? "cloud:" + app : app, MyProperties.instrumented ? true : false, false);
         }
-        client.launch(app, MyProperties.instrumented ? true : false, true);
+        launch();
         client.elementSendText("NATIVE", MyProperties.instrumented ? "xpath=//*[@accessibilityIdentifier='usernameTextField']" : "xpath=//*[@placeholder='Username']", 0, "company");
         client.elementSendText("NATIVE", MyProperties.instrumented ? "xpath=//*[@accessibilityIdentifier='passwordTextField']": "xpath=//*[@placeholder='Password']", 0, "company");
         client.click("NATIVE",MyProperties.instrumented ? "xpath=//*[@accessibilityLabel='Login']" : "xpath=//*[@text='loginButton']", 0, 1);

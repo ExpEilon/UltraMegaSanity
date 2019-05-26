@@ -1,4 +1,5 @@
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IFramesTest extends SeeTestBase {
@@ -8,6 +9,8 @@ public class IFramesTest extends SeeTestBase {
     String urlAfterClickedShare = "xpath=//*[@text='https://youtu.be/bmRWyFAe2Cw']";
     String buttonSameDomain = "xpath=//*[@id='btn1']";
     String urlAfterClickSameDoamin = "xpath=//*[@id='showSrc1']";
+
+    @Ignore
     @Test
     public void differentDomainInHousePage(){
         client.launch(PathsMap.Web.IFramePage,false,true);
@@ -26,6 +29,7 @@ public class IFramesTest extends SeeTestBase {
     int timeout = 10000; // 10 sec
     String zipTextField = "xpath=//*[@id='advZIP']";
     String zipCode = "123456";
+
     @Test
     public void differentDomainPublicPage(){
         client.launch(PathsMap.Web.DifferentFrames,false,true);
@@ -35,6 +39,6 @@ public class IFramesTest extends SeeTestBase {
         Assert.assertTrue("Zip code wasn't send",client.elementGetProperty("WEB",zipTextField,0,"value").equals(zipCode));
         client.elementSendText("WEB",passwordField,0,credentials);
         client.click("WEB",signInButton,0,1);
-        Assert.assertTrue("Didn't find error message, either a regresion in our product or 3rd party",client.waitForElement("WEB",errorSign,0,timeout));
+        Assert.assertTrue("Didn't find error message, either a regresion in our product or 3rd party or connection problem",client.waitForElement("WEB",errorSign,0,timeout));
     }
 }

@@ -10,8 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 public class PressTheDotTest extends SeeTestBase {
-    String csvUserName = "";
-    String csvPassword = "";
 
     @Test
     public void PressTheDotTest() throws InterruptedException, FileNotFoundException, KeyManagementException, NoSuchAlgorithmException {
@@ -32,7 +30,7 @@ public class PressTheDotTest extends SeeTestBase {
 //                    .queryString("deviceId","15")
 //                    .asJson ();
         if(ConfigManager.checkIfSetTrue("installFromPath"))
-            client.install(System.getProperty("user.dir")+"\\apps\\PressTheDot.ipa",false,false);
+            client.install(PathsMap.PressTheDot,false,false);
         else client.install(isGrid ? "cloud:" + "dfs.PressTheDot2" : "dfs.PressTheDot2",false, false);
         client.launch("dfs.PressTheDot2", false, true);
         client.setProperty("ios.auto.accept.alerts", "true");

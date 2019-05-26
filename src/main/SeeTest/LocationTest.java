@@ -29,7 +29,7 @@ public class LocationTest extends SeeTestBase {
     public void testSetLocation() {
         client.setProperty("ios.auto.accept.alerts", "true");
         client.setProperty("ios.request.location.permission", "true");
-        client.install(System.getProperty("user.dir")+"\\apps\\UICatalog.ipa",true,false);
+        client.install(PathsMap.UICatalog,true,false);
         startLocation = launchAndGetLocation();
         client.setLocation(latitudeString, longitudeString);
         AfterChangeLocation = client.getLocation();

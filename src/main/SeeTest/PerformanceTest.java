@@ -30,31 +30,25 @@ public class PerformanceTest extends SeeTestBase {
                 .put("wLaunch", 10330)
                 .put("wDump", 3556)
                 .put("wClick", 3620)
-                .put("nLaunch", 6488)
-                .put("nDump", 921)
-                .put("nClick", 1038)
-                .put("install", 8653)
+//                .put("nLaunch", 6488)
+//                .put("nDump", 921)
+//                .put("nClick", 1038)
+//                .put("install", 8653)
                 .put("release",0)
                 .build();
     }
     Map<String,Integer> mean;
     Map<String,Integer> deviation;
     Map<String,ArrayList<Integer>> results;
+
     @Test
     public void webPerformance(){
         initialize();
         meanExpected.keySet().stream().forEach(k -> results.put(k,new ArrayList<>()));
-        IntStream.range(0,ROUNDS).forEach(i -> {
+        IntStream.range(1,ROUNDS).forEach(i -> {
             meanExpected.keySet().stream().forEach(k ->results.get(k).add((int)getCommandTime(k)));
-            if(((i+1)%10)==0)
-                System.out.println(calaulateMeanAndDeviation(i));
+            System.out.println(i + calaulateMeanAndDeviation(i));
         });
-        //Calculates mean
-//        results.keySet().stream().forEach(k -> mean.put(k,results.get(k).stream().mapToInt(a->a).sum()/ROUNDS));
-//        //Calculates deviation
-//        results.keySet().stream().forEach(k -> deviation.put(k, (int) Math.sqrt(
-//                results.get(k).stream().mapToInt(a->
-//                (int) Math.pow(a-mean.get(k),2)).sum()/ROUNDS)));
 
         WriteSummary.writeToFile(new File(WriteSummary.getRoot()+"//Performance.txt"),MyThread.currentThread().getName() + calaulateMeanAndDeviation(ROUNDS));
     }
@@ -73,7 +67,7 @@ public class PerformanceTest extends SeeTestBase {
                 if(command.equals("reserve"))
                     lockDevice();
                 else if(command.equals("wLaunch"))
-                    client.launch("http://192.168.4.85:8060/html-tests/offsetTest/offsetTestHtml.html", false, true);
+                    client.launch(PathsMap.Web.BigPage, false, true);
                 else if(command.equals("wDump"))
                     client.getVisualDump("WEB");
                 else if(command.equals("wClick"))
@@ -85,7 +79,7 @@ public class PerformanceTest extends SeeTestBase {
                 else if(command.equals("nClick"))
                     client.click("NATIVE", "xpath=//*[@text='Wi-Fi']", 0, 1);
                 else if(command.equals("install"))
-                    client.install(System.getProperty("user.dir") + "\\apps\\EriBank.ipa", false, false);
+                    client.install(PathsMap.EriBank, false, false);
                 else if(command.equals("release"))
                     client.releaseClient();
 
@@ -93,7 +87,7 @@ public class PerformanceTest extends SeeTestBase {
             }catch (Exception e){
                 if(i%2==1) {
                     if (command.equals("wClick"))
-                        client.launch("http://192.168.4.85:8060/html-tests/offsetTest/offsetTestHtml.html", false, true);
+                        client.launch(PathsMap.Web.BigPage, false, true);
                     else if (command.equals("nClick"))
                         client.launch("com.apple.Preferences", false, true);
                 }

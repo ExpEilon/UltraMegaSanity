@@ -2,12 +2,19 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
 import org.apache.commons.io.input.TailerListenerAdapter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class EndIsComingPanel extends JPanel implements ActionListener {
 
@@ -18,7 +25,8 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
     ButtonGroup devicesBG;
     Tailer tailer;
     File logFile;
-    BottomPanel bottomPanel;
+//    BottomPanel bottomPanel;
+    TheSourceOfAllEvilPanel bottomPanel;
     private Thread tailerThread;
 
     public EndIsComingPanel(){
@@ -57,7 +65,14 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == bLog){
             try {
-                Desktop.getDesktop().open(WriteSummary.getRootDirectory());
+                if(new File(WriteSummary.getRoot()).exists())
+                    Desktop.getDesktop().open(WriteSummary.getRootDirectory());
+                else {
+                    JOptionPane.showMessageDialog(null,
+                            "Log file doesn't exists",
+                            "Info",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -109,7 +124,8 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
     public void setNewBottom(DeviceController device){
         if(bottomPanel != null)
             remove(bottomPanel);
-        bottomPanel = new BottomPanel(device);
+//        bottomPanel = new BottomPanel(device);
+        bottomPanel = new TheSourceOfAllEvilPanel(device);
         add(bottomPanel,BorderLayout.SOUTH);
         if(SwingUtilities.getWindowAncestor(this) != null)
             SwingUtilities.getWindowAncestor(this).pack();
@@ -125,13 +141,13 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
     }
 
     private class BottomPanel extends JPanel implements ActionListener{
-        JRadioButton bAllResults,bSummary,bClient;
+        JRadioButton bAllResults,bSummary,bClient,bServer,bAgent;
         ButtonGroup logsBG;
         DeviceController device;
         JPanel logPanel;
         JScrollPane scrollFrame;
-        JTextArea clientText;
-
+        JTextArea logsText;
+        JCheckBox bFreeze;
         public BottomPanel(DeviceController device){
             this.device = device;
             this.setLayout(new BorderLayout());
@@ -141,23 +157,29 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
             bSummary.addActionListener(this);
             bClient = new JRadioButton("Client Log");
             bClient.addActionListener(this);
-//            bDeviceLog = new JRadioButton("Device Log");
-//            bDeviceLog.addActionListener(this);
+            bServer = new JRadioButton("Server Log");
+            bServer.addActionListener(this);
             logsBG = new ButtonGroup();
+            bFreeze = new JCheckBox("Freeze");
+            bFreeze.addActionListener(this);
             logsBG.add(bClient);
             logsBG.add(bAllResults);
             logsBG.add(bSummary);
-//            logsBG.add(bDeviceLog);
+            if(device.getRunOn().isGrid) {
+                logsBG.add(bServer);
+            }
             logPanel = new JPanel(new BorderLayout());
-            clientText = new JTextArea();
-            logPanel.add(clientText,BorderLayout.CENTER);
+            logsText = new JTextArea();
+            logPanel.add(logsText,BorderLayout.CENTER);
             JPanel radioPanel = new JPanel(new GridLayout(1,0));
             radioPanel.add(bClient);
             radioPanel.add(bAllResults);
             if(ConfigManager.rounds > 1)
                 radioPanel.add(bSummary);
-//            if(ConfigManager.checkIfSetTrue("deviceLog"))
-//                radioPanel.add(bDeviceLog);
+            if(device.getRunOn().isGrid) {
+                radioPanel.add(bServer);
+                radioPanel.add(bFreeze);
+            }
             scrollFrame = new JScrollPane(logPanel);
             scrollFrame.setPreferredSize(new Dimension( ConfigManager.WIDTH,ConfigManager.HEIGHT*3/2));
             setAutoscrolls(true);
@@ -178,10 +200,48 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
             else if(e.getSource() == bAllResults){
                 writeLogs(device.getAllResultDirectory());
             }
-//            else if(e.getSource() == bDeviceLog){
-//                writeLogs(device.getDeviceLogDirectory());
-//            }
-
+            else if(e.getSource() == bFreeze){
+                if(bFreeze.isSelected()){
+                    if(tailer != null)
+                        stopWriting();
+                }
+                else restartLogs();
+            }
+            else if(e.getSource() == bServer){
+                File ServerLog = new File(device.getDirectory()+"//Server.log");
+                    Thread serviceRunner = new Thread(() -> {
+                        boolean started = false;
+                        while (bServer.isSelected()) {
+                            String currentLog = device.getLog(device.getMachineId(DeviceController.Service.Server));
+                            if(started){
+                                String lastLine;
+                                try (FileReader fr = new FileReader(ServerLog);
+                                    BufferedReader br = new BufferedReader(fr)) {
+                                    List<String> logsFromFile = br.lines().collect(Collectors.toList());
+                                    while (logsFromFile.get(logsFromFile.size()-1).equals(""))
+                                        logsFromFile.remove(logsFromFile.size()-1);
+                                    lastLine = logsFromFile.get(logsFromFile.size()-1);
+                                    List<String> curLogArr = Arrays.asList(currentLog.split("\r\n"));
+                                    int lastIndex = curLogArr.lastIndexOf(lastLine);
+                                    currentLog = "";
+                                    for (int i = lastIndex + 1; i < curLogArr.size(); i++) {
+                                        if(!curLogArr.get(i).equals(""))
+                                            currentLog += "\r\n" + curLogArr.get(i);
+                                    }
+                                }catch (Exception e1){
+                                    e1.getMessage();
+                                }
+                            }
+                            WriteSummary.writeToFile(ServerLog,currentLog);
+                            if(!started){
+                               started = !started;
+                               writeLogs(ServerLog.getAbsolutePath());
+                           }
+                        }
+                    });
+                    serviceRunner.setName("ServiceLogWriter");
+                serviceRunner.start();
+            }
         }
 
         public void writeLogs(String fromFile){
@@ -198,16 +258,16 @@ public class EndIsComingPanel extends JPanel implements ActionListener {
         }
 
         private void restartLogs(){
-            logPanel.remove(clientText);
-            clientText = new JTextArea();
-            logPanel.add(clientText,BorderLayout.CENTER);
+            logPanel.remove(logsText);
+            logsText = new JTextArea();
+            logPanel.add(logsText,BorderLayout.CENTER);
             if(SwingUtilities.getWindowAncestor(this) != null)
                 SwingUtilities.getWindowAncestor(this).pack();
         }
         private class MyTailerListener extends TailerListenerAdapter {
             public void handle(String line) {
                 JScrollBar vertical = scrollFrame.getVerticalScrollBar();
-                clientText.append("\n" + line);
+                logsText.append("\n" + line);
                 ManagerOfGui.getInstance().getEndIsComingPanel().repaint();
                 if(!vertical.getValueIsAdjusting())
                     vertical.setValue(vertical.getMaximum());

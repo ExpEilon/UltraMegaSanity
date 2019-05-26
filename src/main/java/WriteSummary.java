@@ -32,8 +32,11 @@ public class WriteSummary {
         return root;
     }
 
+    static public String getCurrTime(){
+        return new SimpleDateFormat("yyyy_MM_dd HH_mm_ss").format(System.currentTimeMillis());
+    }
     public static void restartRoot(){
-        root = System.getProperty("user.dir") + "//TestResultAt_" + new SimpleDateFormat("yyyy_MM_dd HH_mm_ss").format(System.currentTimeMillis());
+        root = System.getProperty("user.dir") + "//TestResultAt_" + getCurrTime();
     }
 
     public static void createRoot(){new File(root).mkdir();}

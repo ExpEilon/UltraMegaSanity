@@ -6,7 +6,7 @@ public class MyProperties {
     static String deviecsSN = "00008027-000319C21498002E";//SN separated by ',' or blank for all iOS devices.
     static Class[] tests = {EriBankTest.class,SafariLongRun.class,JavaScriptTest.class,DeviceProperty.class,DeviceActions.class,RunNativeAPICallTest.class,PressTheDotTest.class,
             CounterCommands.class,SetAuthTest.class,MonitorTest.class,SafariSameTab.class, LocationTest.class,EriBankAppium.class,
-            AppiumSafariTest.class,JSAppiumTest.class,ShortTestAppium.class,PerformanceTest.class,ShortTest.class,ClearApplicationDataTest.class,
+            AppiumSafariTest.class,JSAppiumTest.class,ShortTestAppium.class,PerformanceTest.class,ShortTest.class,
             ClearApplicationDataTestAp.class,ClearApplicationDataAutomation.class};//for new iOS OS
 //    static Class[] tests = {EriBankTest.class,PressTheDotTest.class,SafariSameTab.class,SafariLongRun.class,DeviceActions.class,DeviceProperty.class,MonitorTest.class};//for general run
 //    static Class[] tests = {SafariLongRun.class};//Appium sanity

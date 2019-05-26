@@ -10,6 +10,7 @@ import org.apache.commons.io.input.TailerListener;
 import org.apache.commons.io.input.TailerListenerAdapter;
 import org.boon.Str;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.*;
 import com.jcraft.jsch.*;
 
@@ -22,10 +23,12 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.lang.Thread.sleep;
@@ -34,7 +37,9 @@ public class Temp {
 
     protected Client client = null;
     protected GridClient gridClient = null;
+//    private String host = "localhost";
     private String host = "localhost";
+
     private int port = 8889;
    @Before
     public void setUp() throws UnirestException {
@@ -48,8 +53,8 @@ public class Temp {
        //{"command":"kill_and_launch","bundleID":"com.apple.Preferences","timeout":10000,"instrumented":false,"relaunch":true}
 //        client = gridClient.lockDeviceForExecution("Untitled", "@serialnumber='00008020-000844AC3408002E'", 120, TimeUnit.MINUTES.toMillis(2));
 //        client.setReporter("xml", "reports" , "Untitled");
-       client = new Client(host, port, true);
-       client.setDevice("ios_app:B0191");
+//       client = new Client(host, port, true);
+//       client.setDevice("ios_app:B0201");
 //       File f = new File("C:\\Users\\eilon.grodsky\\Documents\\Cloud Application iOS - Should not sign Ad hoc application by default\\PressTheDotAdHoc.ipa");
 //           HttpResponse<JsonNode> response1 = Unirest.post("http://192.168.2.22"+"/api/v1/applications/new")
 //                   .basicAuth("admin", "Experitest2012")
@@ -80,10 +85,38 @@ public class Temp {
     }
     @Test
     public void testUntitled() throws Exception {
-        for (int i = 0; i < 100; i++) {
-            client.launch("https://www.google.com", false, true);
-            client.getVisualDump("WEB");
+        String url = "http://192.168.2.22:9000/sba/instances";
+        HttpResponse<JsonNode> response1 = null;
+        try {
+            response1 = Unirest.get(url)
+                    .basicAuth("admin","Experitest2012")
+                    .asJson();
+        } catch (UnirestException e) {
+            e.printStackTrace();
         }
+        int jLength = response1.getBody().getArray().length();
+        String id = "";
+        for (int i = 0; i < jLength; i++) {
+            JSONObject temp1 = response1.getBody().getArray().getJSONObject(i);
+            JSONObject temp = temp1.getJSONObject("registration");
+            if(temp.getString("serviceUrl").contains("192.168.2.22:9000"))
+                id = temp1.getString("id");
+        }
+
+        System.out.println(id);
+        url = "http://192.168.2.22:9000/sba/instances/"+id+"/actuator/logfile";
+        try {
+            HttpResponse<String> response = Unirest.get(url)
+                    .basicAuth("admin","Experitest2012")
+                    .asString();
+            System.out.println(response.getBody());
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+
+//        Arrays.asList(response1.getBody().getArray())
+//        System.out.println(response1.getBody().getArray());
+
 //        String user = "eilon.grodsky";
 //        String password = "1";
 //        String host = "192.168.2.29";
@@ -195,8 +228,8 @@ public class Temp {
 //        }
     }
 
-        @After
-        public void tearDown () {
-            client.releaseClient();
-        }
+//        @After
+//        public void tearDown () {
+//            client.releaseClient();
+//        }
     }

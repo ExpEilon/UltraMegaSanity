@@ -1,3 +1,4 @@
+import org.junit.Assert;
 import org.junit.Test;
 
 public class ShortTest extends SeeTestBase {
@@ -11,9 +12,14 @@ public class ShortTest extends SeeTestBase {
 //        client.applicationClearData(app);
 //        client.install(pathToApp,true,false);
         client.launch(app, true, true);
-        client.click("NATIVE","xpath=//*[@accessibilityIdentifier='usernameTextField']",0,1);
-        client.sendText("ml \n");
-        client.launch("com.apple.Preferences",false,true);
+//        client.getProperty("automator.version");
+//        client.launch("http://www.wikipedia.org", true, false);
+//        Assert.assertTrue(client.waitForElement("Web", "xpath=//*[@alt='Wikipedia']", 0, 10000));
+//        Assert.assertEquals("{\"resultType\":\"\",\"message\":\"\",\"consoleLog\":\"\",\"succeed\":true}", client.hybridRunJavascript("", 0, "function a(){ return '' }; result = a;")); //
+
+//        client.click("NATIVE","xpath=//*[@accessibilityIdentifier='usernameTextField']",0,1);
+//        client.sendText("ml \n");
+//        client.launch("com.apple.Preferences",false,true);
 //        client.elementSendText("NATIVE", MyProperties.instrumented ? "xpath=//*[@accessibilityIdentifier='usernameTextField']" : "xpath=//*[@placeholder='Username']", 0, "HOQAI rule! \\n");
 //        getContainer(app);
 //        client.applicationClearData("Experitest.FingerPrintApp");

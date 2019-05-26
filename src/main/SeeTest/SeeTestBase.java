@@ -4,10 +4,12 @@ import org.junit.After;
 import org.junit.Before;
 import com.experitest.client.Client;
 import com.experitest.client.GridClient;
+import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +21,9 @@ public abstract class SeeTestBase extends BaseTest{
     Map<String, Object> launchOptionsMap;
     boolean createContainer = MyProperties.createContainer && runOn.isGrid;
     String app,pathToApp;
+
+    @Rule
+    public WatchmanTest watchman= new WatchmanTest();
 
     @Before
     public void setUp() {
@@ -45,6 +50,9 @@ public abstract class SeeTestBase extends BaseTest{
             if (ConfigManager.checkIfSetTrue("extenedClientLog"))
                 client.setLogger(Utils.initDefaultLogger(Level.ALL));
             if (ConfigManager.checkIfSetTrue("deviceLog")) {
+//                File deviceLogFile = new File(projectBaseDirectory + "//deviceLog//deviceLog_");
+//                if(!deviceLogFile.exists())
+//                    deviceLogFile.mkdir();
                 String deviceLogDirectory = projectBaseDirectory + "//deviceLog//deviceLog_" + this.getClass().getName() + "_" + sdFormat.format(new Date()) + ".log";
                 ((MyThread)Thread.currentThread()).getDevice().setDeviceLogDirectory(deviceLogDirectory);
                 client.startLoggingDevice(deviceLogDirectory);
@@ -78,6 +86,9 @@ public abstract class SeeTestBase extends BaseTest{
                 client.stopLoggingDevice();
             if (createContainer)
                 getContainer(app);
+            if(ConfigManager.checkIfSetTrue("collectSupportData"))
+                client.collectSupportData(projectBaseDirectory,"","","","","");
+            MyThread.writeToFile(device.getSummaryDirectory(),client.getVisualDump("WEB"),true);
             client.releaseClient();
             end = System.currentTimeMillis();
             duration = ((end - start) / 1000);
@@ -97,4 +108,25 @@ public abstract class SeeTestBase extends BaseTest{
         return false;
     }
 
+    protected void launch(){
+        if(createContainer)
+            client.launch(app,launchOptionsMap);
+        else client.launch(app,true,true);
+    }
+
+    private class WatchmanTest extends TestWatcher{
+
+            @Override
+            protected void failed(Throwable e, Description description) {
+                if(device.addFail()%3 == 0)
+                    device.takeThreadDump();
+            }
+
+            @Override
+            protected void succeeded(Description description) {
+                device.resetFail();
+            }
+
+
+    }
 }

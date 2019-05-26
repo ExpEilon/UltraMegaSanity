@@ -13,7 +13,6 @@ public class ClearApplicationDataAutomation extends SeeTestBase{
     private static final String DOCUMENTS_MANAGER_MENU_ITEM_XPATH = "nixpath=//*[@label='Documents file manager' and @class='UIAStaticText' and @knownSuperClass='UITableViewLabel' and @y>300 and @visible='true']";
 
 
-    @Ignore
     @Test
     public void keychainItemRemovedAfterApplicationClearData(){
         installAndLaunch();
@@ -36,7 +35,6 @@ public class ClearApplicationDataAutomation extends SeeTestBase{
         client.waitForElement("NATIVE", "xpath=//*[@accessibilityIdentifier='lastStatusInformation' and @text='The specified item could not be found in the keychain.']", 0, 5000);
     }
 
-    @Ignore
     @Test
     public void applicationSettingsResetToDefaultAfterApplicationClearData() {
         installAndLaunch();
@@ -145,8 +143,8 @@ public class ClearApplicationDataAutomation extends SeeTestBase{
     }
 
     private void installAndLaunch(){
-//        client.install(System.getProperty("user.dir")+"\\apps\\UICatalog.ipa",true,false);
-        client.launch(app,true,true);
+        client.install(PathsMap.UICatalog,true,false);
+        launch();
     }
 
 }

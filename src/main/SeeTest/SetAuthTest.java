@@ -40,11 +40,8 @@ public class SetAuthTest extends SeeTestBase {
         client.setProperty("ios.waiting.element.polling.interval","75");//Added after clicking was to fast (performance improvement)
         app = "com.experitest.UICatalog";
 //        if(!installedInstrumented(app))
-        client.install(System.getProperty("user.dir")+"\\apps\\UICatalog.ipa",true,false);
-        if(createContainer)
-            client.launch(app, launchOptionsMap);
-        else
-            client.launch(app, true, true);
+        client.install(PathsMap.UICatalog,true,false);
+        launch();
         client.elementListSelect("", "text=Authentication", 0, true);
         String uIReply;
         String reply;
@@ -78,11 +75,8 @@ public class SetAuthTest extends SeeTestBase {
         app = "com.experitest.UICatalog";
         client.setProperty("ios.waiting.element.polling.interval", "75");//Added after clicking was to fast (performance improvement)
 //        if(!installedInstrumented(app))
-            client.install(System.getProperty("user.dir")+"\\apps\\UICatalog.ipa",true,false);
-        if(createContainer)
-            client.launch(app, launchOptionsMap);
-        else
-            client.launch(app, true, true);
+            client.install(PathsMap.UICatalog,true,false);
+        launch();
         client.elementListSelect("", "text=Authentication", 0, true);
         long time0;
         long measuredWaitTime;
