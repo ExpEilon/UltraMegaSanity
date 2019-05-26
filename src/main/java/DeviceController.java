@@ -98,9 +98,8 @@ public class DeviceController {
         File threadDumpDir = new File(directory + "/ThreadDump");
         if(!threadDumpDir.exists())
             threadDumpDir.mkdir();
-
         String url = getRunOn().getURL() + "/sba/instances/"+getMachineId(Service.Agent)+"/actuator/threaddump";
-        String threadDumpFile = threadDumpDir.getAbsolutePath() + WriteSummary.getCurrTime()+".txt";
+        String threadDumpFile = threadDumpDir.getAbsolutePath() +"/"+ WriteSummary.getCurrTime()+".txt";
         try {
             HttpResponse<String> response = Unirest.get(url)
                     .basicAuth(getRunOn().getUsername(), getRunOn().getPassword())
